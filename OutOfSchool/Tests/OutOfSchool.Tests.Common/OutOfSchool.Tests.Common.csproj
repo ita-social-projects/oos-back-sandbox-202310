@@ -1,0 +1,11 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <PackageReference Include="Bogus" />
+    <PackageReference Include="NUnit" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\OutOfSchool.DataAccess\OutOfSchool.DataAccess.csproj" />
+    <ProjectReference Include="..\..\OutOfSchool.WebApi\OutOfSchool.WebApi.csproj" />
+  </ItemGroup>
+</Project>
