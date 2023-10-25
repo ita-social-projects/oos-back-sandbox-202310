@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace OutOfSchool.Services.Models;
-public class ChildrenAchievement : IKeyedEntity<Guid>
+public class ChildAchievement : IKeyedEntity<Guid>
 {
     public Guid Id { get; set; }
 
