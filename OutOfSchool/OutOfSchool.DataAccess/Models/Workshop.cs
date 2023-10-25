@@ -120,4 +120,6 @@ public class Workshop : IKeyedEntity<Guid>, IImageDependentEntity<Workshop>, ISo
     public virtual List<Image<Workshop>> Images { get; set; }
 
     public bool IsBlocked { get; set; } = false;
+
+    public ICollection<ChildAchievement> ChildAchievements { get; set; }
 }
