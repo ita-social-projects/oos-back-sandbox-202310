@@ -1,9 +1,3 @@
-using System;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using MySqlConnector;
-using OutOfSchool.Common.Extensions.Startup;
-using OutOfSchool.WebApi.Config.Quartz;
 using Quartz;
 
 namespace OutOfSchool.WebApi.Extensions.Startup;
@@ -31,26 +25,6 @@ public static class QuartzExtension
         {
             q.SchedulerId = DefaultQuartzConfig.DefaultId;
             q.SchedulerName = DefaultQuartzConfig.DefaultName;
-
-            q.UsePersistentStore(s =>
-            {
-                s.UseProperties = true;
-                s.UseMySql(sqlServer =>
-                {
-                    sqlServer.ConnectionString = configuration.GetMySqlConnectionString<QuartzConnectionOptions>(
-                        quartzConnectionString,
-                        options => new MySqlConnectionStringBuilder
-                        {
-                            Server = options.Server,
-                            Port = options.Port,
-                            UserID = options.UserId,
-                            Password = options.Password,
-                            Database = options.Database,
-                        });
-                });
-                s.UseJsonSerializer();
-                s.UseClustering();
-            });
 
             q.UseMicrosoftDependencyInjectionJobFactory();
             q.UseTimeZoneConverter();
