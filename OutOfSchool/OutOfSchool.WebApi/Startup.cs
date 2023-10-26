@@ -237,6 +237,7 @@ public static class Startup
                     sp.GetRequiredService<IMapper>())
                 : new WorkshopServiceStrategy(sp.GetRequiredService<IWorkshopService>(), sp.GetRequiredService<ILogger<WorkshopServiceStrategy>>());
         });
+        services.AddTransient<IChildAchievementService, ChildAchievementService>();
 
         // entities repositories
         services.AddTransient(typeof(IEntityAddOnlyRepository<,>), typeof(EntityRepository<,>));

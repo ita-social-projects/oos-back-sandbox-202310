@@ -1,7 +1,9 @@
 ﻿namespace OutOfSchool.WebApi.Models;
 
-public class ChildAchievementDto
+public class ChildAchievementCreationDto
 {
+    public Guid Id { get; set; }
+
     public string Type { get; set; }
 
     public DateTime Date { get; set; }
@@ -11,5 +13,4 @@ public class ChildAchievementDto
     public Guid ChildId { get; set; }
 
     public Guid WorkshopId { get; set; }
-
 }

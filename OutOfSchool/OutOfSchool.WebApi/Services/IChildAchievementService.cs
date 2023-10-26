@@ -4,7 +4,7 @@ namespace OutOfSchool.WebApi.Services;
 
 public interface IChildAchievementService
 {
-    Task<ChildAchievementDto> CreateAchievement(ChildAchievementDto childAchievementDto);
+    Task<ChildAchievementCreationDto> CreateAchievement(ChildAchievementCreationDto childAchievementCreationDto);
 
     public Task DeleteAchievement(ChildAchievementDto childAchievementDto);
 
