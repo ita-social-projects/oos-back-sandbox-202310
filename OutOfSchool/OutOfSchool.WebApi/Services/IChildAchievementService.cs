@@ -6,7 +6,7 @@ public interface IChildAchievementService
 {
     Task<ChildAchievementCreationDto> CreateAchievement(ChildAchievementCreationDto childAchievementCreationDto);
 
-    public Task DeleteAchievement(ChildAchievementDto childAchievementDto);
+    public Task DeleteAchievement(Guid id);
 
     public Task<ChildAchievementDto> UpdateAchievement(ChildAchievementDto childAchievementDto);
 

@@ -30,12 +30,9 @@ public class ChildAchievementService : IChildAchievementService
         return mapper.Map<ChildAchievementCreationDto>(newAchive);
     }
 
-    public async Task DeleteAchievement(ChildAchievementDto childAchievementDto)
+    public async Task DeleteAchievement(Guid id)
     {
-        _ = childAchievementDto ?? throw new ArgumentNullException(nameof(childAchievementDto));
-        var childAchievement = mapper.Map<ChildAchievement>(childAchievementDto);
-        await childAchievementRepository.Delete(childAchievement);
-        return;
+        await childAchievementRepository.Delete(id);
     }
 
     public async Task<IEnumerable<ChildAchievementDto>> GetAchievementForChildId(Guid id)

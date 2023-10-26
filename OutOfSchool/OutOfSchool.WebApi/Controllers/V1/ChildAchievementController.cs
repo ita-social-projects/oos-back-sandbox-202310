@@ -21,9 +21,9 @@ public class ChildAchievementController : ControllerBase
     }
 
     [HttpDelete]
-    public async Task<IActionResult> Delete(ChildAchievementDto childAchievementDto)
+    public async Task<IActionResult> Delete(Guid id)
     {
-        await service.DeleteAchievement(childAchievementDto);
+        await service.DeleteAchievement(id);
         return Ok();
     }
 

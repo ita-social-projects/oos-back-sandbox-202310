@@ -12,7 +12,7 @@ public interface IChildAchievementRepository
 
     Task<ChildAchievement> Update(ChildAchievement childAchievement);
 
-    Task Delete(ChildAchievement childAchievement);
+    Task Delete(Guid id);
 
     Task<IEnumerable<ChildAchievement>> GetForWorkshop(Guid id);
 

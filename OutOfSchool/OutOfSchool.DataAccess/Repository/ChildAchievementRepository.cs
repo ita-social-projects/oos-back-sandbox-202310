@@ -23,9 +23,14 @@ public class ChildAchievementRepository : IChildAchievementRepository
         return await Task.FromResult(childAchievement).ConfigureAwait(false);
     }
 
-    public async Task Delete(ChildAchievement childAchievement)
+    public async Task Delete(Guid id)
     {
-        dbContext.Entry(childAchievement).State = EntityState.Deleted;
+        var achi = await dbContext.ChildAchievements.FindAsync(id);
+        if (achi != null)
+        {
+            dbContext.ChildAchievements.Remove(achi);
+        }
+
         await dbContext.SaveChangesAsync().ConfigureAwait(false);
     }
 
