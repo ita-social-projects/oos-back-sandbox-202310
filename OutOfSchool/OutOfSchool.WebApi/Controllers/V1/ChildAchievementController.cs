@@ -34,21 +34,21 @@ public class ChildAchievementController : ControllerBase
         return Ok(updatedAchive);
     }
 
-    [HttpGet]
+    [HttpGet("GetForChildId")]
     public async Task<IActionResult> GetForChildId(Guid id)
     {
         var childAchievements = service.GetAchievementForChildId(id);
         return Ok(childAchievements);
     }
 
-    [HttpGet]
+    [HttpGet("GetForWorkshopId")]
     public async Task<IActionResult> GetForWorkshopId(Guid id)
     {
         var childAchievements = service.GetAchievementForWorkshopId(id);
         return Ok(childAchievements);
     }
 
-    [HttpGet]
+    [HttpGet("GetForChildIdWorkshopId")]
     public async Task<IActionResult> GetForChildIdWorkshopId(Guid childId,Guid workshopId)
     {
         var childAchievements = service.GetAchievementForWorkshopIdChildId(childId, workshopId);
