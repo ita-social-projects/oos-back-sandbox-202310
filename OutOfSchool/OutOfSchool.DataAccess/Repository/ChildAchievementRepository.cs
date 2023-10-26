@@ -51,7 +51,6 @@ public class ChildAchievementRepository : IChildAchievementRepository
     public async Task<ChildAchievement> Update(ChildAchievement childAchievement)
     {
         dbContext.Entry(childAchievement).State = EntityState.Modified;
-
         await dbContext.SaveChangesAsync().ConfigureAwait(false);
 
         return await Task.FromResult(childAchievement).ConfigureAwait(false);
