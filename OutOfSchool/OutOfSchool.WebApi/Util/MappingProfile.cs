@@ -490,6 +490,11 @@ public class MappingProfile : Profile
 
         CreateMap<WorkshopFilter, WorkshopFilterWithSettlements>()
             .ForMember(dest => dest.SettlementsIds, opt => opt.Ignore());
+
+        CreateMap<ChildAchievement, ChildAchievementDto>();
+        CreateMap<ChildAchievement, ChildAchievementCreationDto>();
+        CreateMap<ChildAchievementDto, ChildAchievement>();
+        CreateMap<ChildAchievementCreationDto, ChildAchievement>();
     }
 
     private IMappingExpression<TSource, TDestination> CreateSoftDeletedMap<TSource, TDestination>()
