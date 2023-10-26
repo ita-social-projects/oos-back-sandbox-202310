@@ -34,6 +34,11 @@ public class ChildAchievementRepository : IChildAchievementRepository
         await dbContext.SaveChangesAsync().ConfigureAwait(false);
     }
 
+    public async Task<ChildAchievement> GetById(Guid id)
+    {
+        return await dbContext.ChildAchievements.FindAsync(id);
+    }
+
     public async Task<IEnumerable<ChildAchievement>> GetForChild(Guid id)
     {
         return await dbContext.ChildAchievements.Where(x => x.ChildId == id)

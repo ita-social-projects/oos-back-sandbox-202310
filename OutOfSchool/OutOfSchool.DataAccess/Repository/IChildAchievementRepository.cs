@@ -14,6 +14,8 @@ public interface IChildAchievementRepository
 
     Task Delete(Guid id);
 
+    Task<ChildAchievement> GetById(Guid id);
+
     Task<IEnumerable<ChildAchievement>> GetForWorkshop(Guid id);
 
     Task<IEnumerable<ChildAchievement>> GetForChild(Guid id);

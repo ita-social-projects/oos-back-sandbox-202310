@@ -11,5 +11,4 @@ public class ChildAchievementDto
     public Guid ChildId { get; set; }
 
     public Guid WorkshopId { get; set; }
-
 }
