@@ -19,7 +19,7 @@ public class ChildAchievementController : ControllerBase
     /// </summary>
     /// <param name="childAchievementCreationDto">Child achievement entity to add.</param>
     /// <returns>The child achievement that was created.</returns>
-    //[HasPermission(Permissions.ChildAddNew)]
+    [HasPermission(Permissions.ChildAddNew)]
     [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(ChildDto))]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
