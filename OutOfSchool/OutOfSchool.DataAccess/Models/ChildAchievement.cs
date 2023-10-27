@@ -17,10 +17,10 @@ public class ChildAchievement : IKeyedEntity<Guid>
 
     public Guid ChildId { get; set; }
 
-    public Child Child { get; set; }
+    public virtual Child Child { get; set; }
 
     public Guid WorkshopId { get; set; }
 
-    public Workshop Workshop { get; set; }
+    public virtual Workshop Workshop { get; set; }
 
 }

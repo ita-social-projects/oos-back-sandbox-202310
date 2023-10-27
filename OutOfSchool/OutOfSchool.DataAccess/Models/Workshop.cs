@@ -121,5 +121,5 @@ public class Workshop : IKeyedEntity<Guid>, IImageDependentEntity<Workshop>, ISo
 
     public bool IsBlocked { get; set; } = false;
 
-    public ICollection<ChildAchievement> ChildAchievements { get; set; }
+    public virtual ICollection<ChildAchievement> ChildAchievements { get; set; }
 }
