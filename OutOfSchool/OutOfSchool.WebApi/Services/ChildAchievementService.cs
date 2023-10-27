@@ -2,9 +2,11 @@
 using Elastic.CommonSchema;
 using Microsoft.Extensions.Options;
 using Nest;
+using OutOfSchool.ElasticsearchData.Models;
 using OutOfSchool.Services.Models;
 using OutOfSchool.WebApi.Models;
 using System.Security.Cryptography;
+using static Nest.JoinField;
 
 namespace OutOfSchool.WebApi.Services;
 
@@ -42,13 +44,17 @@ public class ChildAchievementService : IChildAchievementService
 
         var child = (await childRepository.GetById(childAchievementCreationDto.ChildId).ConfigureAwait(false))
             ?? throw new UnauthorizedAccessException(
-                $"Trying to create a new child achievement the Child with {nameof(childAchievementCreationDto.ChildId)}:{childAchievementCreationDto.ChildId} was not found.");
+                $"Trying to create a new child achievement the Child with " +
+                $"{nameof(childAchievementCreationDto.ChildId)}:{childAchievementCreationDto.ChildId} was not found.");
         var workshop = (await workshopRepository.GetById(childAchievementCreationDto.WorkshopId).ConfigureAwait(false))
             ?? throw new UnauthorizedAccessException(
-                $"Trying to create a new child achievement the Workshop with {nameof(childAchievementCreationDto.WorkshopId)}:{childAchievementCreationDto.WorkshopId} was not found.");
-        var application = (await workshopRepository.GetById(childAchievementCreationDto.WorkshopId).ConfigureAwait(false))
+                $"Trying to create a new child achievement the Workshop with " +
+                $"{nameof(childAchievementCreationDto.WorkshopId)}:{childAchievementCreationDto.WorkshopId} was not found.");
+        var application = (await applicationRepository.GetForWorkshopChild(childAchievementCreationDto.ChildId, childAchievementCreationDto.WorkshopId).ConfigureAwait(false))
             ?? throw new UnauthorizedAccessException(
-                $"Trying to create a new child achievement the Workshop with {nameof(childAchievementCreationDto.WorkshopId)}:{childAchievementCreationDto.WorkshopId} was not found.");
+                $"Trying to create a new child achievement the Applicaion with " +
+                $"{nameof(childAchievementCreationDto.ChildId)}:{childAchievementCreationDto.ChildId} and " +
+                $"{nameof(childAchievementCreationDto.WorkshopId)}:{childAchievementCreationDto.WorkshopId}  was not found.");
         foreach (Teacher t in workshop.Teachers) {
             if (string.Format(t.LastName + " " + t.FirstName + " " + t.MiddleName) == childAchievementCreationDto.Trainer)
             {
@@ -108,7 +114,11 @@ public class ChildAchievementService : IChildAchievementService
         var workshop = (await workshopRepository.GetById(workshopId).ConfigureAwait(false))
             ?? throw new UnauthorizedAccessException(
                 $"Trying to get workshop childs achievements the Workshop with {nameof(workshopId)}:{workshopId} was not found.");
-
+        var application = (await applicationRepository.GetForWorkshopChild(childId, workshopId).ConfigureAwait(false))
+            ?? throw new UnauthorizedAccessException(
+                $"Trying to get childs achievement the Applicaion with " +
+                $"{nameof(childId)}:{childId} and " +
+                $"{nameof(workshopId)}:{workshopId}  was not found.");
         var childAchievements = await childAchievementRepository.GetForWorkshopChild(childId, workshopId);
         List<ChildAchievementDto> childAchievementsDto = new List<ChildAchievementDto>();
         foreach (ChildAchievement ch in childAchievements)
@@ -124,10 +134,17 @@ public class ChildAchievementService : IChildAchievementService
         _ = childAchievementDto ?? throw new ArgumentNullException(nameof(childAchievementDto));
         var child = (await childRepository.GetById(childAchievementDto.ChildId).ConfigureAwait(false))
             ?? throw new UnauthorizedAccessException(
-                $"Trying to update child achievement the Child with {nameof(childAchievementDto.ChildId)}:{childAchievementDto.ChildId} was not found.");
+                $"Trying to update child achievement the Child with " +
+                $"{nameof(childAchievementDto.ChildId)}:{childAchievementDto.ChildId} was not found.");
         var workshop = (await workshopRepository.GetById(childAchievementDto.WorkshopId).ConfigureAwait(false))
             ?? throw new UnauthorizedAccessException(
-                $"Trying to update child achievement the Workshop with {nameof(childAchievementDto.WorkshopId)}:{childAchievementDto.WorkshopId} was not found.");
+                $"Trying to update child achievement the Workshop with " +
+                $"{nameof(childAchievementDto.WorkshopId)}:{childAchievementDto.WorkshopId} was not found.");
+        var application = (await applicationRepository.GetForWorkshopChild(childAchievementDto.ChildId, childAchievementDto.WorkshopId).ConfigureAwait(false))
+            ?? throw new UnauthorizedAccessException(
+                $"Trying to update child achievement the Applicaion with " +
+                $"{nameof(childAchievementDto.ChildId)}:{childAchievementDto.ChildId} and " +
+                $"{nameof(childAchievementDto.WorkshopId)}:{childAchievementDto.WorkshopId}  was not found.");
         foreach (Teacher t in workshop.Teachers)
         {
             if (string.Format(t.LastName + " " + t.FirstName + " " + t.MiddleName) == childAchievementDto.Trainer)
