@@ -9,7 +9,7 @@ public class ChildAchievement : IKeyedEntity<Guid>
 {
     public Guid Id { get; set; }
 
-    public string Type { get; set; }
+    public int ChildAchievementTypeId { get; set; }
 
     public DateTime Date { get; set; }
 
@@ -22,9 +22,4 @@ public class ChildAchievement : IKeyedEntity<Guid>
     public Guid WorkshopId { get; set; }
 
     public virtual Workshop Workshop { get; set; }
-
-    public int ChildAchievementTypeId { get; set; }
-
-    public ChildAchievementType ChildAchievementType { get; set; }
-
 }
