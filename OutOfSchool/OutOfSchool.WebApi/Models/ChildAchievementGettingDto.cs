@@ -1,15 +1,12 @@
-﻿using System.ComponentModel.DataAnnotations;
-using RequiredAttribute = System.ComponentModel.DataAnnotations.RequiredAttribute;
-using OutOfSchool.WebApi.Validators;
+﻿using OutOfSchool.WebApi.Validators;
+using System.ComponentModel.DataAnnotations;
+
 namespace OutOfSchool.WebApi.Models;
 
-public class ChildAchievementCreationDto
+public class ChildAchievementGettingDto
 {
-    [Required(ErrorMessage = "Id is required")]
-    public Guid Id { get; set; }
-
     [Required(ErrorMessage = "Type is required")]
-    public int ChildAchievementTypeId { get; set; }
+    public string Type { get; set; }
 
     [Required(ErrorMessage = "Date is required")]
     [DataType(DataType.Date)]

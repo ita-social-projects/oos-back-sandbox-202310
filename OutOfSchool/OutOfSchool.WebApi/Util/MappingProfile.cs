@@ -493,8 +493,11 @@ public class MappingProfile : Profile
 
         CreateMap<ChildAchievement, ChildAchievementDto>();
         CreateMap<ChildAchievement, ChildAchievementCreationDto>();
+        CreateMap<ChildAchievement, ChildAchievementGettingDto>();
         CreateMap<ChildAchievementDto, ChildAchievement>();
         CreateMap<ChildAchievementCreationDto, ChildAchievement>();
+        CreateMap<ChildAchievementGettingDto, ChildAchievement>();
+        
     }
 
     private IMappingExpression<TSource, TDestination> CreateSoftDeletedMap<TSource, TDestination>()

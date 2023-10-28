@@ -8,8 +8,7 @@ namespace OutOfSchool.WebApi.Models;
 public class ChildAchievementDto
 {
     [Required(ErrorMessage = "Type is required")]
-    [ValidAchievementType(ErrorMessage = "Invalid achievement type")]
-    public string Type { get; set; }
+    public int ChildAchievementTypeId { get; set; }
 
     [Required(ErrorMessage = "Date is required")]
     [DataType(DataType.Date)]

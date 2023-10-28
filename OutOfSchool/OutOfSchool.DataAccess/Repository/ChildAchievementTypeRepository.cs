@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace OutOfSchool.Services.Repository;
-internal class ChildAchievementTypeRepository : IChildAchievementTypeRepository
+public class ChildAchievementTypeRepository : IChildAchievementTypeRepository
 {
     private readonly OutOfSchoolDbContext dbContext;
 
