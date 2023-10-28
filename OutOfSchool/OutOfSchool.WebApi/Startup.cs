@@ -275,6 +275,7 @@ public static class Startup
 
         services.AddTransient<ICodeficatorRepository, CodeficatorRepository>();
         services.AddTransient<IChildAchievementRepository, ChildAchievementRepository>();
+        services.AddTransient<IChildAchievementTypeRepository, ChildAchievementTypeRepository>();
 
         services.Configure<ChangesLogConfig>(configuration.GetSection(ChangesLogConfig.Name));
 
