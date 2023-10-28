@@ -10,9 +10,9 @@ public interface IChildAchievementService
 
     public Task<ChildAchievementDto> UpdateAchievement(ChildAchievementDto childAchievementDto);
 
-    public Task<IEnumerable<ChildAchievementDto>> GetAchievementForChildId(Guid id);
+    public Task<IEnumerable<ChildAchievementGettingDto>> GetAchievementForChildId(Guid id);
 
-    public Task<IEnumerable<ChildAchievementDto>> GetAchievementForWorkshopId(Guid id);
+    public Task<IEnumerable<ChildAchievementGettingDto>> GetAchievementForWorkshopId(Guid id);
 
-    public Task<IEnumerable<ChildAchievementDto>> GetAchievementForWorkshopIdChildId(Guid childId, Guid workshopId);
+    public Task<IEnumerable<ChildAchievementGettingDto>> GetAchievementForWorkshopIdChildId(Guid childId, Guid workshopId);
 }
