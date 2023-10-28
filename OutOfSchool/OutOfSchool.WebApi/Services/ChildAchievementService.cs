@@ -62,11 +62,14 @@ public class ChildAchievementService : IChildAchievementService
                 $"Trying to create a new child achievement the Applicaion with " +
                 $"{nameof(childAchievementCreationDto.ChildId)}:{childAchievementCreationDto.ChildId} and " +
                 $"{nameof(childAchievementCreationDto.WorkshopId)}:{childAchievementCreationDto.WorkshopId}  was not found.");
-        foreach (Teacher t in workshop.Teachers) {
+        foreach (Teacher t in workshop.Teachers)
+        {
             if (string.Format(t.LastName + " " + t.FirstName + " " + t.MiddleName) == childAchievementCreationDto.Trainer)
             {
                 var childAchievement = mapper.Map<ChildAchievement>(childAchievementCreationDto);
                 var newAchive = await childAchievementRepository.Create(childAchievement);
+                logger.LogDebug(
+                $"Child achievement {childAchievementCreationDto} was created successfully.");
                 return mapper.Map<ChildAchievementCreationDto>(newAchive);
             }
         }
@@ -77,14 +80,20 @@ public class ChildAchievementService : IChildAchievementService
 
     public async Task DeleteAchievement(Guid id)
     {
+        logger.LogDebug(
+            $"Started deleting child achievement with {nameof(id)}:{id}.");
         var achi = (await childAchievementRepository.GetById(id).ConfigureAwait(false))
             ?? throw new UnauthorizedAccessException(
                 $"Trying to delete not existing Child (Id = {id}).");
         await childAchievementRepository.Delete(id);
+        logger.LogDebug(
+                $"Child achievement with Id:{id} was created successfully.");
     }
 
     public async Task<IEnumerable<ChildAchievementGettingDto>> GetAchievementForChildId(Guid id)
     {
+        logger.LogDebug(
+            $"Started getting child achievement with {nameof(id)}:{id}.");
         var child = (await childRepository.GetById(id).ConfigureAwait(false))
             ?? throw new UnauthorizedAccessException(
                 $"Trying to get child achievement the Child with {nameof(id)}:{id} was not found.");
@@ -97,11 +106,15 @@ public class ChildAchievementService : IChildAchievementService
             childAchievementsDto.Last().Type = type.Type;
         }
 
+        logger.LogDebug(
+                $"Child achievements with child Id:{id} was successfully finded.");
         return childAchievementsDto;
     }
 
     public async Task<IEnumerable<ChildAchievementGettingDto>> GetAchievementForWorkshopId(Guid id)
     {
+        logger.LogDebug(
+            $"Started getting child achievement with {nameof(id)}:{id}.");
         var workshop = (await workshopRepository.GetById(id).ConfigureAwait(false))
             ?? throw new UnauthorizedAccessException(
                 $"Trying to get workshop childs achievements the Workshop with {nameof(id)}:{id} was not found.");
@@ -114,11 +127,15 @@ public class ChildAchievementService : IChildAchievementService
             childAchievementsDto.Last().Type = type.Type;
         }
 
+        logger.LogDebug(
+                $"Child achievements with workshop Id:{id} was successfully finded.");
         return childAchievementsDto;
     }
 
     public async Task<IEnumerable<ChildAchievementGettingDto>> GetAchievementForWorkshopIdChildId(Guid childId, Guid workshopId)
     {
+        logger.LogDebug(
+            $"Started getting child achievement with {nameof(childId)}:{childId}, {nameof(workshopId)}:{workshopId}.");
         var child = (await childRepository.GetById(childId).ConfigureAwait(false))
             ?? throw new UnauthorizedAccessException(
                 $"Trying to get child achievement the Child with {nameof(childId)}:{childId} was not found.");
@@ -139,11 +156,15 @@ public class ChildAchievementService : IChildAchievementService
             childAchievementsDto.Last().Type = type.Type;
         }
 
+        logger.LogDebug(
+                $"Child achievements with child Id:{childId}, workshop Id:{workshopId} was successfully finded.");
         return childAchievementsDto;
     }
 
-    public async Task<ChildAchievementDto> UpdateAchievement(ChildAchievementDto childAchievementDto)
+    public async Task<ChildAchievementUpdatingDto> UpdateAchievement(ChildAchievementUpdatingDto childAchievementDto)
     {
+        logger.LogDebug(
+            $"Started updation of a new child achievement {nameof(childAchievementDto)}:{childAchievementDto}.");
         _ = childAchievementDto ?? throw new ArgumentNullException(nameof(childAchievementDto));
         var type = (await childAchievementTypeRepository.GetById(childAchievementDto.ChildAchievementTypeId).ConfigureAwait(false))
             ?? throw new UnauthorizedAccessException(
@@ -168,7 +189,9 @@ public class ChildAchievementService : IChildAchievementService
             {
                 var childAchievement = mapper.Map<ChildAchievement>(childAchievementDto);
                 var updatedAchive = await childAchievementRepository.Update(childAchievement);
-                return mapper.Map<ChildAchievementDto>(updatedAchive);
+                logger.LogDebug(
+                $"Child achievement {childAchievementDto} was updated successfully.");
+                return mapper.Map<ChildAchievementUpdatingDto>(updatedAchive);
             }
         }
 
