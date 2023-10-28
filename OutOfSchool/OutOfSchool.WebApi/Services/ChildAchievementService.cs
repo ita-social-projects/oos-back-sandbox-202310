@@ -13,7 +13,7 @@ namespace OutOfSchool.WebApi.Services;
 public class ChildAchievementService : IChildAchievementService
 {
     private readonly IChildAchievementRepository childAchievementRepository;
-    private readonly IEntityRepositorySoftDeleted<Guid, Child> childRepository;
+    private readonly IEntityRepositorySoftDeleted<Guid, OutOfSchool.Services.Models.Child> childRepository;
     private readonly IWorkshopRepository workshopRepository;
     private readonly IApplicationRepository applicationRepository;
     private readonly ILogger<ChildAchievementService> logger;
@@ -21,7 +21,7 @@ public class ChildAchievementService : IChildAchievementService
 
     public ChildAchievementService(
         IChildAchievementRepository childAchievementRepository,
-        IEntityRepositorySoftDeleted<Guid, Child> childRepository,
+        IEntityRepositorySoftDeleted<Guid, OutOfSchool.Services.Models.Child> childRepository,
         IWorkshopRepository workshopRepository,
         IApplicationRepository applicationRepository,
         ILogger<ChildAchievementService> logger,

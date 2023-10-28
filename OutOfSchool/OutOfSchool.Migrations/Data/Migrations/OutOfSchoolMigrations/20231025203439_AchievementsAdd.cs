@@ -14,8 +14,7 @@ namespace OutOfSchool.Migrations.Data.Migrations.OutOfSchoolMigrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "binary(16)", nullable: false),
-                    Type = table.Column<string>(type: "longtext", nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    ChildAchievementTypeId = table.Column<int>(type: "int", nullable: false),
                     Date = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     Trainer = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
