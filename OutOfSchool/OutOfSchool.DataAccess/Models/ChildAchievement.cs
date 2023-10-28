@@ -23,4 +23,8 @@ public class ChildAchievement : IKeyedEntity<Guid>
 
     public virtual Workshop Workshop { get; set; }
 
+    public int ChildAchievementTypeId { get; set; }
+
+    public ChildAchievementType ChildAchievementType { get; set; }
+
 }
