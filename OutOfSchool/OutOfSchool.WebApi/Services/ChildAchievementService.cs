@@ -5,7 +5,7 @@ using Nest;
 using OutOfSchool.ElasticsearchData.Models;
 using OutOfSchool.Services.Models;
 using OutOfSchool.Services.Repository;
-using OutOfSchool.WebApi.Models;
+using OutOfSchool.WebApi.Models.ChildAchievement;
 using System.Security.Cryptography;
 using static Nest.JoinField;
 
@@ -45,33 +45,33 @@ public class ChildAchievementService : IChildAchievementService
         this.mapper = mapper;
     }
 
-    public async Task<ChildAchievementCreationDto> CreateAchievement(ChildAchievementCreationDto childAchievementCreationDto, string userId)
+    public async Task<ChildAchievementCreationDto> CreateAchievement(ChildAchievementCreationRequestDto childAchievementCreationRequestDto, string userId)
     {
-        _ = childAchievementCreationDto ?? throw new ArgumentNullException(nameof(childAchievementCreationDto));
+        _ = childAchievementCreationRequestDto ?? throw new ArgumentNullException(nameof(childAchievementCreationRequestDto));
 
         logger.LogDebug(
-            $"Started creation of a new child achievement {nameof(childAchievementCreationDto)}:{childAchievementCreationDto}.");
+            $"Started creation of a new child achievement {nameof(childAchievementCreationRequestDto)}:{childAchievementCreationRequestDto}.");
 
-        var type = (await childAchievementTypeRepository.GetById(childAchievementCreationDto.ChildAchievementTypeId).ConfigureAwait(false))
+        var type = (await childAchievementTypeRepository.GetById(childAchievementCreationRequestDto.ChildAchievementTypeId).ConfigureAwait(false))
             ?? throw new ArgumentException(
                 $"Trying to create a new child achievement the Type with " +
-                $"{nameof(childAchievementCreationDto.ChildAchievementTypeId)}:{childAchievementCreationDto.ChildAchievementTypeId} was not found.");
-        var child = (await childRepository.GetById(childAchievementCreationDto.ChildId).ConfigureAwait(false))
-                ?? throw new ArgumentException(
-                $"Trying to create a new child achievement the Child with " +
-                $"{nameof(childAchievementCreationDto.ChildId)}:{childAchievementCreationDto.ChildId} was not found.");
-        var workshop = (await workshopRepository.GetById(childAchievementCreationDto.WorkshopId).ConfigureAwait(false))
-            ?? throw new ArgumentException(
-                $"Trying to create a new child achievement the Workshop with " +
-                $"{nameof(childAchievementCreationDto.WorkshopId)}:{childAchievementCreationDto.WorkshopId} was not found.");
-        var application = (await applicationRepository.GetForWorkshopChild(childAchievementCreationDto.ChildId, childAchievementCreationDto.WorkshopId).ConfigureAwait(false))
+                $"{nameof(childAchievementCreationRequestDto.ChildAchievementTypeId)}:{childAchievementCreationRequestDto.ChildAchievementTypeId} was not found.");
+        var application = (await applicationRepository.GetById(childAchievementCreationRequestDto.ApplicationId).ConfigureAwait(false))
             ?? throw new ArgumentException(
                 $"Trying to create a new child achievement the Applicaion with " +
-                $"{nameof(childAchievementCreationDto.ChildId)}:{childAchievementCreationDto.ChildId} and " +
-                $"{nameof(childAchievementCreationDto.WorkshopId)}:{childAchievementCreationDto.WorkshopId}  was not found.");
+                $"{nameof(childAchievementCreationRequestDto.ApplicationId)}:{childAchievementCreationRequestDto.ApplicationId} " +
+                $"was not found.");
+        var child = (await childRepository.GetById(application.ChildId).ConfigureAwait(false))
+                ?? throw new ArgumentException(
+                $"Trying to create a new child achievement the Child with " +
+                $"{nameof(application.ChildId)}:{application.ChildId} was not found.");
+        var workshop = (await workshopRepository.GetById(application.WorkshopId).ConfigureAwait(false))
+            ?? throw new ArgumentException(
+                $"Trying to create a new child achievement the Workshop with " +
+                $"{nameof(application.WorkshopId)}:{application.WorkshopId} was not found.");
 
         var admin = (await providerAdminRepository.GetByFilter(p => p.UserId == userId).ConfigureAwait(false)).SingleOrDefault();
-        if (admin.ProviderId != workshop.ProviderId) 
+        if (admin.ProviderId != workshop.ProviderId)
         {
             throw new UnauthorizedAccessException(
                 $"Trying to create a new child the achievement by provider admin wich cant do that.");
@@ -79,19 +79,21 @@ public class ChildAchievementService : IChildAchievementService
 
         foreach (Teacher t in workshop.Teachers)
         {
-            if (t.Id == childAchievementCreationDto.TrainerId)
+            if (t.Id == childAchievementCreationRequestDto.TrainerId)
             {
-                var childAchievement = mapper.Map<ChildAchievement>(childAchievementCreationDto);
+                var childAchievement = mapper.Map<ChildAchievement>(childAchievementCreationRequestDto);
                 childAchievement.Date = DateTime.Now;
+                childAchievement.WorkshopId = application.WorkshopId;
+                childAchievement.ChildId = application.ChildId;
                 var newAchive = await childAchievementRepository.Create(childAchievement);
                 logger.LogDebug(
-                    $"Child achievement {childAchievementCreationDto} was created successfully.");
+                    $"Child achievement {childAchievementCreationRequestDto} was created successfully.");
                 return mapper.Map<ChildAchievementCreationDto>(newAchive);
             }
         }
 
         throw new ArgumentException(
-                $"Trying to create a new child achievement the Workshop teacher with {nameof(childAchievementCreationDto.TrainerId)}:{childAchievementCreationDto.TrainerId} was not found.");
+                $"Trying to create a new child achievement the Workshop teacher with {nameof(childAchievementCreationRequestDto.TrainerId)}:{childAchievementCreationRequestDto.TrainerId} was not found.");
     }
 
     public async Task DeleteAchievement(Guid id, string userId)

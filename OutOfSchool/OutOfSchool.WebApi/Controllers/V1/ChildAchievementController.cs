@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using OutOfSchool.WebApi.Common;
 using OutOfSchool.WebApi.Models;
+using OutOfSchool.WebApi.Models.ChildAchievement;
 
 namespace OutOfSchool.WebApi.Controllers.V1;
 [Route("api/[controller]")]
@@ -18,7 +19,7 @@ public class ChildAchievementController : ControllerBase
     /// <summary>
     /// Method for creating a new child achievement.
     /// </summary>
-    /// <param name="childAchievementCreationDto">Child achievement entity to add.</param>
+    /// <param name="childAchievementCreationRequestDto">Child achievement entity to add.</param>
     /// <returns>The child achievement that was created.</returns>
     [HasPermission(Permissions.ChildAchievementCreate)]
     [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(ChildAchievementCreationDto))]
@@ -27,9 +28,9 @@ public class ChildAchievementController : ControllerBase
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [HttpPost]
-    public async Task<IActionResult> Create(ChildAchievementCreationDto childAchievementCreationDto) {
+    public async Task<IActionResult> Create(ChildAchievementCreationRequestDto childAchievementCreationRequestDto) {
         string userId = GettingUserProperties.GetUserId(User);
-        var newAchive = await service.CreateAchievement(childAchievementCreationDto, userId);
+        var newAchive = await service.CreateAchievement(childAchievementCreationRequestDto, userId);
         return Created(
             nameof(newAchive),
             newAchive);

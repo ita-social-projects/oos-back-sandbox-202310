@@ -1,9 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using RequiredAttribute = System.ComponentModel.DataAnnotations.RequiredAttribute;
-using OutOfSchool.WebApi.Validators;
-namespace OutOfSchool.WebApi.Models;
 
-public class ChildAchievementCreationDto
+namespace OutOfSchool.WebApi.Models.ChildAchievement;
+
+public class ChildAchievementCreationRequestDto
 {
     [Required(ErrorMessage = "Type is required")]
     public int ChildAchievementTypeId { get; set; }
@@ -15,9 +14,6 @@ public class ChildAchievementCreationDto
     [Required(ErrorMessage = "Trainer is required")]
     public Guid TrainerId { get; set; }
 
-    [Required(ErrorMessage = "Child id is required")]
-    public Guid ChildId { get; set; }
-
-    [Required(ErrorMessage = "Workshop id is required")]
-    public Guid WorkshopId { get; set; }
+    [Required(ErrorMessage = "Application id is required")]
+    public Guid ApplicationId { get; set; }
 }

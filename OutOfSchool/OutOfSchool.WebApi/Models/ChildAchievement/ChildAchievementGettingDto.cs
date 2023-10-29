@@ -1,7 +1,7 @@
 ﻿using OutOfSchool.WebApi.Validators;
 using System.ComponentModel.DataAnnotations;
 
-namespace OutOfSchool.WebApi.Models;
+namespace OutOfSchool.WebApi.Models.ChildAchievement;
 
 public class ChildAchievementGettingDto
 {
