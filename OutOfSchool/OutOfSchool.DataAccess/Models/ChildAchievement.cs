@@ -13,7 +13,7 @@ public class ChildAchievement : IKeyedEntity<Guid>
 
     public DateTime Date { get; set; }
 
-    public int TrainerId { get; set; }
+    public Guid TrainerId { get; set; }
 
     public Guid ChildId { get; set; }
 

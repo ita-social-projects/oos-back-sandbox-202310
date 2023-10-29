@@ -16,7 +16,7 @@ namespace OutOfSchool.Migrations.Data.Migrations.OutOfSchoolMigrations
                     Id = table.Column<Guid>(type: "binary(16)", nullable: false),
                     ChildAchievementTypeId = table.Column<int>(type: "int", nullable: false),
                     Date = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    TrainerId = table.Column<int>(type: "int", nullable: false),
+                    TrainerId = table.Column<Guid>(type: "binary(16)", nullable: false),
                     ChildId = table.Column<Guid>(type: "binary(16)", nullable: false),
                     WorkshopId = table.Column<Guid>(type: "binary(16)", nullable: false)
                 },

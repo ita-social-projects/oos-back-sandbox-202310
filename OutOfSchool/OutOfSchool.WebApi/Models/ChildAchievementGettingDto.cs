@@ -19,6 +19,9 @@ public class ChildAchievementGettingDto
     [Required(ErrorMessage = "Trainer is required")]
     public string Trainer { get; set; }
 
+    [Required(ErrorMessage = "Trainer id is required")]
+    public int TrainerId { get; set; }
+
     [Required(ErrorMessage = "Child id is required")]
     public Guid ChildId { get; set; }
 

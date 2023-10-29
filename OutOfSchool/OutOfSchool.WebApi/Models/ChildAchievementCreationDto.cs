@@ -9,7 +9,7 @@ public class ChildAchievementCreationDto
     public int ChildAchievementTypeId { get; set; }
 
     [Required(ErrorMessage = "Trainer is required")]
-    public string Trainer { get; set; }
+    public int TrainerId { get; set; }
 
     [Required(ErrorMessage = "Child id is required")]
     public Guid ChildId { get; set; }

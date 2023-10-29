@@ -15,6 +15,7 @@ public class ChildAchievementService : IChildAchievementService
     private readonly IChildAchievementRepository childAchievementRepository;
     private readonly IChildAchievementTypeRepository childAchievementTypeRepository;
     private readonly IEntityRepositorySoftDeleted<Guid, OutOfSchool.Services.Models.Child> childRepository;
+    private readonly ISensitiveEntityRepositorySoftDeleted<Teacher> teacherRepository;
     private readonly IWorkshopRepository workshopRepository;
     private readonly IApplicationRepository applicationRepository;
     private readonly ILogger<ChildAchievementService> logger;
@@ -24,6 +25,7 @@ public class ChildAchievementService : IChildAchievementService
         IChildAchievementRepository childAchievementRepository,
         IChildAchievementTypeRepository childAchievementTypeRepository,
         IEntityRepositorySoftDeleted<Guid, OutOfSchool.Services.Models.Child> childRepository,
+        ISensitiveEntityRepositorySoftDeleted<Teacher> teacherRepository,
         IWorkshopRepository workshopRepository,
         IApplicationRepository applicationRepository,
         ILogger<ChildAchievementService> logger,
@@ -32,6 +34,7 @@ public class ChildAchievementService : IChildAchievementService
         this.childAchievementRepository = childAchievementRepository;
         this.childAchievementTypeRepository = childAchievementTypeRepository;
         this.childRepository = childRepository;
+        this.teacherRepository = teacherRepository;
         this.workshopRepository = workshopRepository;
         this.applicationRepository = applicationRepository;
         this.logger = logger;
@@ -49,14 +52,14 @@ public class ChildAchievementService : IChildAchievementService
             ?? throw new ArgumentException(
                 $"Trying to create a new child achievement the Type with " +
                 $"{nameof(childAchievementCreationDto.ChildAchievementTypeId)}:{childAchievementCreationDto.ChildAchievementTypeId} was not found.");
-        var child = (await childRepository.GetById(childAchievementCreationDto.ChildId).ConfigureAwait(false));
-        //    ?? throw new ArgumentException(
-        //        $"Trying to create a new child achievement the Child with " +
-        //        $"{nameof(childAchievementCreationDto.ChildId)}:{childAchievementCreationDto.ChildId} was not found.");
-        var workshop = (await workshopRepository.GetById(childAchievementCreationDto.WorkshopId).ConfigureAwait(false));
-            //?? throw new ArgumentException(
-            //    $"Trying to create a new child achievement the Workshop with " +
-            //    $"{nameof(childAchievementCreationDto.WorkshopId)}:{childAchievementCreationDto.WorkshopId} was not found.");
+        var child = (await childRepository.GetById(childAchievementCreationDto.ChildId).ConfigureAwait(false))
+                ?? throw new ArgumentException(
+                $"Trying to create a new child achievement the Child with " +
+                $"{nameof(childAchievementCreationDto.ChildId)}:{childAchievementCreationDto.ChildId} was not found.");
+        var workshop = (await workshopRepository.GetById(childAchievementCreationDto.WorkshopId).ConfigureAwait(false))
+            ?? throw new ArgumentException(
+                $"Trying to create a new child achievement the Workshop with " +
+                $"{nameof(childAchievementCreationDto.WorkshopId)}:{childAchievementCreationDto.WorkshopId} was not found.");
         var application = (await applicationRepository.GetForWorkshopChild(childAchievementCreationDto.ChildId, childAchievementCreationDto.WorkshopId).ConfigureAwait(false))
             ?? throw new ArgumentException(
                 $"Trying to create a new child achievement the Applicaion with " +
@@ -64,7 +67,7 @@ public class ChildAchievementService : IChildAchievementService
                 $"{nameof(childAchievementCreationDto.WorkshopId)}:{childAchievementCreationDto.WorkshopId}  was not found.");
         foreach (Teacher t in workshop.Teachers)
         {
-            if (string.Format(t.LastName + " " + t.FirstName + " " + t.MiddleName) == childAchievementCreationDto.Trainer)
+            if (t.Id == childAchievementCreationDto.TrainerId)
             {
                 var childAchievement = mapper.Map<ChildAchievement>(childAchievementCreationDto);
                 childAchievement.Date = DateTime.Now;
@@ -104,6 +107,7 @@ public class ChildAchievementService : IChildAchievementService
         {
             childAchievementsDto.Add(mapper.Map<ChildAchievementGettingDto>(ch));
             var type = await childAchievementTypeRepository.GetById(ch.ChildAchievementTypeId);
+            var teacher = await teacherRepository.GetById(ch.TrainerId);
             childAchievementsDto.Last().Type = type.Type;
         }
 
