@@ -4,6 +4,7 @@ using Microsoft.Extensions.Options;
 using Nest;
 using OutOfSchool.ElasticsearchData.Models;
 using OutOfSchool.Services.Models;
+using OutOfSchool.Services.Repository;
 using OutOfSchool.WebApi.Models;
 using System.Security.Cryptography;
 using static Nest.JoinField;
@@ -14,6 +15,7 @@ public class ChildAchievementService : IChildAchievementService
 {
     private readonly IChildAchievementRepository childAchievementRepository;
     private readonly IChildAchievementTypeRepository childAchievementTypeRepository;
+    private readonly IProviderAdminRepository providerAdminRepository;
     private readonly IEntityRepositorySoftDeleted<Guid, OutOfSchool.Services.Models.Child> childRepository;
     private readonly ISensitiveEntityRepositorySoftDeleted<Teacher> teacherRepository;
     private readonly IWorkshopRepository workshopRepository;
@@ -24,6 +26,7 @@ public class ChildAchievementService : IChildAchievementService
     public ChildAchievementService(
         IChildAchievementRepository childAchievementRepository,
         IChildAchievementTypeRepository childAchievementTypeRepository,
+        IProviderAdminRepository providerAdminRepository,
         IEntityRepositorySoftDeleted<Guid, OutOfSchool.Services.Models.Child> childRepository,
         ISensitiveEntityRepositorySoftDeleted<Teacher> teacherRepository,
         IWorkshopRepository workshopRepository,
@@ -33,6 +36,7 @@ public class ChildAchievementService : IChildAchievementService
     {
         this.childAchievementRepository = childAchievementRepository;
         this.childAchievementTypeRepository = childAchievementTypeRepository;
+        this.providerAdminRepository = providerAdminRepository;
         this.childRepository = childRepository;
         this.teacherRepository = teacherRepository;
         this.workshopRepository = workshopRepository;
@@ -41,7 +45,7 @@ public class ChildAchievementService : IChildAchievementService
         this.mapper = mapper;
     }
 
-    public async Task<ChildAchievementCreationDto> CreateAchievement(ChildAchievementCreationDto childAchievementCreationDto)
+    public async Task<ChildAchievementCreationDto> CreateAchievement(ChildAchievementCreationDto childAchievementCreationDto, string userId)
     {
         _ = childAchievementCreationDto ?? throw new ArgumentNullException(nameof(childAchievementCreationDto));
 
@@ -65,6 +69,14 @@ public class ChildAchievementService : IChildAchievementService
                 $"Trying to create a new child achievement the Applicaion with " +
                 $"{nameof(childAchievementCreationDto.ChildId)}:{childAchievementCreationDto.ChildId} and " +
                 $"{nameof(childAchievementCreationDto.WorkshopId)}:{childAchievementCreationDto.WorkshopId}  was not found.");
+
+        var admin = (await providerAdminRepository.GetByFilter(p => p.UserId == userId).ConfigureAwait(false)).SingleOrDefault();
+        if (admin.ProviderId != workshop.ProviderId) 
+        {
+            throw new UnauthorizedAccessException(
+                $"Trying to create a new child the achievement by provider admin wich cant do that.");
+        }
+
         foreach (Teacher t in workshop.Teachers)
         {
             if (t.Id == childAchievementCreationDto.TrainerId)
@@ -82,13 +94,27 @@ public class ChildAchievementService : IChildAchievementService
                 $"Trying to create a new child achievement the Workshop teacher with {nameof(childAchievementCreationDto.TrainerId)}:{childAchievementCreationDto.TrainerId} was not found.");
     }
 
-    public async Task DeleteAchievement(Guid id)
+    public async Task DeleteAchievement(Guid id, string userId)
     {
         logger.LogDebug(
             $"Started deleting child achievement with {nameof(id)}:{id}.");
+
         var achi = (await childAchievementRepository.GetById(id).ConfigureAwait(false))
             ?? throw new ArgumentException(
                 $"Trying to delete not existing Child (Id = {id}).");
+
+        var workshop = (await workshopRepository.GetById(achi.WorkshopId).ConfigureAwait(false))
+            ?? throw new ArgumentException(
+                $"Trying to delete a new child achievement the Workshop with " +
+                $"{nameof(achi.WorkshopId)}:{achi.WorkshopId} was not found.");
+
+        var admin = (await providerAdminRepository.GetByFilter(p => p.UserId == userId).ConfigureAwait(false)).SingleOrDefault();
+        if (admin.ProviderId != workshop.ProviderId)
+        {
+            throw new UnauthorizedAccessException(
+                $"Trying to delete child the achievement by provider admin wich cant do that.");
+        }
+
         await childAchievementRepository.Delete(id);
         logger.LogDebug(
                 $"Child achievement with Id:{id} was created successfully.");
@@ -171,7 +197,7 @@ public class ChildAchievementService : IChildAchievementService
         return childAchievementsDto;
     }
 
-    public async Task<ChildAchievementUpdatingDto> UpdateAchievement(ChildAchievementUpdatingDto childAchievementDto)
+    public async Task<ChildAchievementUpdatingDto> UpdateAchievement(ChildAchievementUpdatingDto childAchievementDto, string userId)
     {
         logger.LogDebug(
             $"Started updation of a new child achievement {nameof(childAchievementDto)}:{childAchievementDto}.");
@@ -193,6 +219,14 @@ public class ChildAchievementService : IChildAchievementService
                 $"Trying to update child achievement the Applicaion with " +
                 $"{nameof(childAchievementDto.ChildId)}:{childAchievementDto.ChildId} and " +
                 $"{nameof(childAchievementDto.WorkshopId)}:{childAchievementDto.WorkshopId}  was not found.");
+
+        var admin = (await providerAdminRepository.GetByFilter(p => p.UserId == userId).ConfigureAwait(false)).SingleOrDefault();
+        if (admin.ProviderId != workshop.ProviderId)
+        {
+            throw new UnauthorizedAccessException(
+                $"Trying to update child the achievement by provider admin wich cant do that.");
+        }
+
         foreach (Teacher t in workshop.Teachers)
         {
             if (t.Id == childAchievementDto.TrainerId)

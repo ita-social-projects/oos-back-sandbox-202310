@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using OutOfSchool.WebApi.Common;
 using OutOfSchool.WebApi.Models;
 
 namespace OutOfSchool.WebApi.Controllers.V1;
@@ -19,7 +20,7 @@ public class ChildAchievementController : ControllerBase
     /// </summary>
     /// <param name="childAchievementCreationDto">Child achievement entity to add.</param>
     /// <returns>The child achievement that was created.</returns>
-    //[HasPermission(Permissions.ChildAchievementCreate)]
+    [HasPermission(Permissions.ChildAchievementCreate)]
     [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(ChildAchievementCreationDto))]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -27,7 +28,8 @@ public class ChildAchievementController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [HttpPost]
     public async Task<IActionResult> Create(ChildAchievementCreationDto childAchievementCreationDto) {
-        var newAchive = await service.CreateAchievement(childAchievementCreationDto);
+        string userId = GettingUserProperties.GetUserId(User);
+        var newAchive = await service.CreateAchievement(childAchievementCreationDto, userId);
         return Created(
             nameof(newAchive),
             newAchive);
@@ -38,7 +40,7 @@ public class ChildAchievementController : ControllerBase
     /// </summary>
     /// <param name="id">The child achievement id.</param>
     /// <returns>If deletion was successful, the result will be Status Code 204.</returns>
-    //[HasPermission(Permissions.ChildAchievementDelete)]
+    [HasPermission(Permissions.ChildAchievementDelete)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -47,7 +49,8 @@ public class ChildAchievementController : ControllerBase
     [HttpDelete]
     public async Task<IActionResult> Delete(Guid id)
     {
-        await service.DeleteAchievement(id);
+        string userId = GettingUserProperties.GetUserId(User);
+        await service.DeleteAchievement(id, userId);
         return NoContent();
     }
 
@@ -56,7 +59,7 @@ public class ChildAchievementController : ControllerBase
     /// </summary>
     /// <param name="childAchievementDto">Child achievement entity to update.</param>
     /// <returns>The child achievement that was updated.</returns>
-    //[HasPermission(Permissions.ChildAchievementUpdate)]
+    [HasPermission(Permissions.ChildAchievementUpdate)]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ChildAchievementUpdatingDto))]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -65,7 +68,8 @@ public class ChildAchievementController : ControllerBase
     [HttpPut]
     public async Task<IActionResult> Update(ChildAchievementUpdatingDto childAchievementDto)
     {
-        var updatedAchive = await service.UpdateAchievement(childAchievementDto);
+        string userId = GettingUserProperties.GetUserId(User);
+        var updatedAchive = await service.UpdateAchievement(childAchievementDto, userId);
         return Ok(updatedAchive);
     }
 
@@ -97,7 +101,7 @@ public class ChildAchievementController : ControllerBase
     /// </summary>
     /// <param name="id">Workshop id to get achievement entity.</param>
     /// <returns>The child achievement that was founded.</returns>
-    //[AllowAnonymous]
+    [AllowAnonymous]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(SearchResult<ChildAchievementGettingDto>))]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -121,7 +125,7 @@ public class ChildAchievementController : ControllerBase
     /// <param name="childId">Child id to get achievement entity.</param>
     /// <param name="workshopId">Workshop id to get achievement entity.</param>
     /// <returns>The child achievement that was founded.</returns>
-    //[AllowAnonymous]
+    [AllowAnonymous]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(SearchResult<ChildAchievementGettingDto>))]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -145,7 +149,7 @@ public class ChildAchievementController : ControllerBase
     /// <param name="childId">Child id to get achievement entity.</param>
     /// <param name="workshopId">Workshop id to get achievement entity.</param>
     /// <returns>The child achievements that was founded.</returns>
-    //[AllowAnonymous]
+    [AllowAnonymous]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(SearchResult<ChildAchievementGettingDto>))]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
