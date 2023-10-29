@@ -65,4 +65,9 @@ public class ChildAchievementRepository : IChildAchievementRepository
 
         return await Task.FromResult(childAchievement).ConfigureAwait(false);
     }
+
+    public async Task<IEnumerable<ChildAchievement>> GetAll()
+    {
+        return await Task.FromResult(await dbContext.ChildAchievements.ToListAsync()).ConfigureAwait(false);
+    }
 }

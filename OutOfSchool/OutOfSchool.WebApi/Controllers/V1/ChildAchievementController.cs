@@ -138,4 +138,29 @@ public class ChildAchievementController : ControllerBase
         }
         return Ok(childAchievements);
     }
+
+    /// <summary>
+    /// Get all children achievements.
+    /// </summary>
+    /// <param name="childId">Child id to get achievement entity.</param>
+    /// <param name="workshopId">Workshop id to get achievement entity.</param>
+    /// <returns>The child achievements that was founded.</returns>
+    //[AllowAnonymous]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(SearchResult<ChildDto>))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [HttpGet("GetAll")]
+    public async Task<IActionResult> GetAll()
+    {
+        var childAchievements = await service.GetAll();
+
+        if (childAchievements.Count() == 0)
+        {
+            return NoContent();
+        }
+
+        return Ok(childAchievements);
+    }
 }

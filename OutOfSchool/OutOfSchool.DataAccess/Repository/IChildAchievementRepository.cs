@@ -21,4 +21,6 @@ public interface IChildAchievementRepository
     Task<IEnumerable<ChildAchievement>> GetForChild(Guid id);
 
     Task<IEnumerable<ChildAchievement>> GetForWorkshopChild(Guid childId, Guid workshopId);
+
+    Task<IEnumerable<ChildAchievement>> GetAll();
 }

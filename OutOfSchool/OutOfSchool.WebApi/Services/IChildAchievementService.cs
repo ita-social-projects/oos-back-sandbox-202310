@@ -15,4 +15,6 @@ public interface IChildAchievementService
     public Task<IEnumerable<ChildAchievementGettingDto>> GetAchievementForWorkshopId(Guid id);
 
     public Task<IEnumerable<ChildAchievementGettingDto>> GetAchievementForWorkshopIdChildId(Guid childId, Guid workshopId);
+
+    Task<IEnumerable<ChildAchievementGettingDto>> GetAll();
 }

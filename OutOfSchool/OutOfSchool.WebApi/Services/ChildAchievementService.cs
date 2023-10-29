@@ -208,4 +208,24 @@ public class ChildAchievementService : IChildAchievementService
         throw new ArgumentException(
                 $"Trying to update child achievement the Workshop teacher with {nameof(childAchievementDto.TrainerId)}:{childAchievementDto.TrainerId} was not found.");
     }
+
+    public async Task<IEnumerable<ChildAchievementGettingDto>> GetAll()
+    {
+        logger.LogDebug(
+            $"Started getting all child achievements.");
+        var childAchievements = await childAchievementRepository.GetAll();
+        List<ChildAchievementGettingDto> childAchievementsDto = new List<ChildAchievementGettingDto>();
+        foreach (ChildAchievement ch in childAchievements)
+        {
+            childAchievementsDto.Add(mapper.Map<ChildAchievementGettingDto>(ch));
+            var type = await childAchievementTypeRepository.GetById(ch.ChildAchievementTypeId);
+            var teacher = await teacherRepository.GetById(ch.TrainerId);
+            childAchievementsDto.Last().Type = type.Type;
+            childAchievementsDto.Last().Trainer = string.Format(teacher.FirstName + " " + teacher.LastName + " " + teacher.MiddleName);
+        }
+
+        logger.LogDebug(
+                $"All child achievements was successfully finded.");
+        return childAchievementsDto;
+    }
 }
