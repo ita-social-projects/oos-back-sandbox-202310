@@ -79,7 +79,7 @@ public class ChildAchievementService : IChildAchievementService
         }
 
         throw new ArgumentException(
-                $"Trying to create a new child achievement the Workshop teacher with {nameof(childAchievementCreationDto.Trainer)}:{childAchievementCreationDto.Trainer} was not found.");
+                $"Trying to create a new child achievement the Workshop teacher with {nameof(childAchievementCreationDto.TrainerId)}:{childAchievementCreationDto.TrainerId} was not found.");
     }
 
     public async Task DeleteAchievement(Guid id)
@@ -109,6 +109,7 @@ public class ChildAchievementService : IChildAchievementService
             var type = await childAchievementTypeRepository.GetById(ch.ChildAchievementTypeId);
             var teacher = await teacherRepository.GetById(ch.TrainerId);
             childAchievementsDto.Last().Type = type.Type;
+            childAchievementsDto.Last().Trainer = string.Format(teacher.FirstName + " " + teacher.LastName + " " + teacher.MiddleName);
         }
 
         logger.LogDebug(
@@ -129,7 +130,9 @@ public class ChildAchievementService : IChildAchievementService
         {
             childAchievementsDto.Add(mapper.Map<ChildAchievementGettingDto>(ch));
             var type = await childAchievementTypeRepository.GetById(ch.ChildAchievementTypeId);
+            var teacher = await teacherRepository.GetById(ch.TrainerId);
             childAchievementsDto.Last().Type = type.Type;
+            childAchievementsDto.Last().Trainer = string.Format(teacher.FirstName + " " + teacher.LastName + " " + teacher.MiddleName);
         }
 
         logger.LogDebug(
@@ -158,7 +161,9 @@ public class ChildAchievementService : IChildAchievementService
         {
             childAchievementsDto.Add(mapper.Map<ChildAchievementGettingDto>(ch));
             var type = await childAchievementTypeRepository.GetById(ch.ChildAchievementTypeId);
+            var teacher = await teacherRepository.GetById(ch.TrainerId);
             childAchievementsDto.Last().Type = type.Type;
+            childAchievementsDto.Last().Trainer = string.Format(teacher.FirstName + " " + teacher.LastName + " " + teacher.MiddleName);
         }
 
         logger.LogDebug(
@@ -190,7 +195,7 @@ public class ChildAchievementService : IChildAchievementService
                 $"{nameof(childAchievementDto.WorkshopId)}:{childAchievementDto.WorkshopId}  was not found.");
         foreach (Teacher t in workshop.Teachers)
         {
-            if (string.Format(t.LastName + " " + t.FirstName + " " + t.MiddleName) == childAchievementDto.Trainer)
+            if (t.Id == childAchievementDto.TrainerId)
             {
                 var childAchievement = mapper.Map<ChildAchievement>(childAchievementDto);
                 var updatedAchive = await childAchievementRepository.Update(childAchievement);
@@ -201,6 +206,6 @@ public class ChildAchievementService : IChildAchievementService
         }
 
         throw new ArgumentException(
-                $"Trying to update child achievement the Workshop teacher with {nameof(childAchievementDto.Trainer)}:{childAchievementDto.Trainer} was not found.");
+                $"Trying to update child achievement the Workshop teacher with {nameof(childAchievementDto.TrainerId)}:{childAchievementDto.TrainerId} was not found.");
     }
 }

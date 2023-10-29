@@ -20,7 +20,7 @@ public class ChildAchievementGettingDto
     public string Trainer { get; set; }
 
     [Required(ErrorMessage = "Trainer id is required")]
-    public int TrainerId { get; set; }
+    public Guid TrainerId { get; set; }
 
     [Required(ErrorMessage = "Child id is required")]
     public Guid ChildId { get; set; }

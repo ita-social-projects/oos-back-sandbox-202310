@@ -28,7 +28,7 @@ public class ChildAchievementController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Create(ChildAchievementCreationDto childAchievementCreationDto) {
         var newAchive = await service.CreateAchievement(childAchievementCreationDto);
-        return CreatedAtAction(
+        return Created(
             nameof(newAchive),
             newAchive);
     }
@@ -56,7 +56,7 @@ public class ChildAchievementController : ControllerBase
     /// </summary>
     /// <param name="childAchievementDto">Child achievement entity to update.</param>
     /// <returns>The child achievement that was updated.</returns>
-    [HasPermission(Permissions.ChildAchievementUpdate)]
+    //[HasPermission(Permissions.ChildAchievementUpdate)]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ChildDto))]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
