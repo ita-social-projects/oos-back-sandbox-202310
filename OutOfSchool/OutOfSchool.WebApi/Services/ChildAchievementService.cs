@@ -45,7 +45,7 @@ public class ChildAchievementService : IChildAchievementService
         this.mapper = mapper;
     }
 
-    public async Task<ChildAchievementCreationDto> CreateAchievement(ChildAchievementCreationRequestDto childAchievementCreationRequestDto, string userId)
+    public async Task<ChildAchievementCreationResponseDto> CreateAchievement(ChildAchievementCreationRequestDto childAchievementCreationRequestDto, string userId)
     {
         _ = childAchievementCreationRequestDto ?? throw new ArgumentNullException(nameof(childAchievementCreationRequestDto));
 
@@ -88,7 +88,7 @@ public class ChildAchievementService : IChildAchievementService
                 var newAchive = await childAchievementRepository.Create(childAchievement);
                 logger.LogDebug(
                     $"Child achievement {childAchievementCreationRequestDto} was created successfully.");
-                return mapper.Map<ChildAchievementCreationDto>(newAchive);
+                return mapper.Map<ChildAchievementCreationResponseDto>(newAchive);
             }
         }
 
@@ -199,28 +199,27 @@ public class ChildAchievementService : IChildAchievementService
         return childAchievementsDto;
     }
 
-    public async Task<ChildAchievementUpdatingDto> UpdateAchievement(ChildAchievementUpdatingDto childAchievementDto, string userId)
+    public async Task<ChildAchievementUpdatingResponseDto> UpdateAchievement(ChildAchievementUpdatingRequestDto childAchievementUpdatingRequestDto, string userId)
     {
         logger.LogDebug(
-            $"Started updation of a new child achievement {nameof(childAchievementDto)}:{childAchievementDto}.");
-        _ = childAchievementDto ?? throw new ArgumentNullException(nameof(childAchievementDto));
-        var type = (await childAchievementTypeRepository.GetById(childAchievementDto.ChildAchievementTypeId).ConfigureAwait(false))
+            $"Started updation of a new child achievement {nameof(childAchievementUpdatingRequestDto)}:{childAchievementUpdatingRequestDto}.");
+        _ = childAchievementUpdatingRequestDto ?? throw new ArgumentNullException(nameof(childAchievementUpdatingRequestDto));
+        var type = (await childAchievementTypeRepository.GetById(childAchievementUpdatingRequestDto.ChildAchievementTypeId).ConfigureAwait(false))
             ?? throw new ArgumentException(
                 $"Trying to create a new child achievement the Type with " +
-                $"{nameof(childAchievementDto.ChildAchievementTypeId)}:{childAchievementDto.ChildAchievementTypeId} was not found.");
-        var child = (await childRepository.GetById(childAchievementDto.ChildId).ConfigureAwait(false))
-            ?? throw new ArgumentException(
-                $"Trying to update child achievement the Child with " +
-                $"{nameof(childAchievementDto.ChildId)}:{childAchievementDto.ChildId} was not found.");
-        var workshop = (await workshopRepository.GetById(childAchievementDto.WorkshopId).ConfigureAwait(false))
-            ?? throw new ArgumentException(
-                $"Trying to update child achievement the Workshop with " +
-                $"{nameof(childAchievementDto.WorkshopId)}:{childAchievementDto.WorkshopId} was not found.");
-        var application = (await applicationRepository.GetForWorkshopChild(childAchievementDto.ChildId, childAchievementDto.WorkshopId).ConfigureAwait(false))
+                $"{nameof(childAchievementUpdatingRequestDto.ChildAchievementTypeId)}:{childAchievementUpdatingRequestDto.ChildAchievementTypeId} was not found.");
+        var application = (await applicationRepository.GetById(childAchievementUpdatingRequestDto.ApplicationId).ConfigureAwait(false))
             ?? throw new ArgumentException(
                 $"Trying to update child achievement the Applicaion with " +
-                $"{nameof(childAchievementDto.ChildId)}:{childAchievementDto.ChildId} and " +
-                $"{nameof(childAchievementDto.WorkshopId)}:{childAchievementDto.WorkshopId}  was not found.");
+                $"{nameof(childAchievementUpdatingRequestDto.ApplicationId)}:{childAchievementUpdatingRequestDto.ApplicationId} was not found.");
+        var child = (await childRepository.GetById(application.ChildId).ConfigureAwait(false))
+            ?? throw new ArgumentException(
+                $"Trying to update child achievement the Child with " +
+                $"{nameof(application.ChildId)}:{application.ChildId} was not found.");
+        var workshop = (await workshopRepository.GetById(application.WorkshopId).ConfigureAwait(false))
+            ?? throw new ArgumentException(
+                $"Trying to update child achievement the Workshop with " +
+                $"{nameof(application.WorkshopId)}:{application.WorkshopId} was not found.");
 
         var admin = (await providerAdminRepository.GetByFilter(p => p.UserId == userId).ConfigureAwait(false)).SingleOrDefault();
         if (admin.ProviderId != workshop.ProviderId)
@@ -231,18 +230,20 @@ public class ChildAchievementService : IChildAchievementService
 
         foreach (Teacher t in workshop.Teachers)
         {
-            if (t.Id == childAchievementDto.TrainerId)
+            if (t.Id == childAchievementUpdatingRequestDto.TrainerId)
             {
-                var childAchievement = mapper.Map<ChildAchievement>(childAchievementDto);
+                var childAchievement = mapper.Map<ChildAchievement>(childAchievementUpdatingRequestDto);
+                childAchievement.WorkshopId = application.WorkshopId;
+                childAchievement.ChildId = application.ChildId;
                 var updatedAchive = await childAchievementRepository.Update(childAchievement);
                 logger.LogDebug(
-                $"Child achievement {childAchievementDto} was updated successfully.");
-                return mapper.Map<ChildAchievementUpdatingDto>(updatedAchive);
+                $"Child achievement {childAchievementUpdatingRequestDto} was updated successfully.");
+                return mapper.Map<ChildAchievementUpdatingResponseDto>(updatedAchive);
             }
         }
 
         throw new ArgumentException(
-                $"Trying to update child achievement the Workshop teacher with {nameof(childAchievementDto.TrainerId)}:{childAchievementDto.TrainerId} was not found.");
+                $"Trying to update child achievement the Workshop teacher with {nameof(childAchievementUpdatingRequestDto.TrainerId)}:{childAchievementUpdatingRequestDto.TrainerId} was not found.");
     }
 
     public async Task<IEnumerable<ChildAchievementGettingDto>> GetAll()

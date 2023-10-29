@@ -22,7 +22,7 @@ public class ChildAchievementController : ControllerBase
     /// <param name="childAchievementCreationRequestDto">Child achievement entity to add.</param>
     /// <returns>The child achievement that was created.</returns>
     [HasPermission(Permissions.ChildAchievementCreate)]
-    [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(ChildAchievementCreationDto))]
+    [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(ChildAchievementCreationResponseDto))]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
@@ -58,19 +58,19 @@ public class ChildAchievementController : ControllerBase
     /// <summary>
     /// Update info about child achievement in the database.
     /// </summary>
-    /// <param name="childAchievementDto">Child achievement entity to update.</param>
+    /// <param name="childAchievementUpdatingRequestDto">Child achievement entity to update.</param>
     /// <returns>The child achievement that was updated.</returns>
     [HasPermission(Permissions.ChildAchievementUpdate)]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ChildAchievementUpdatingDto))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ChildAchievementUpdatingResponseDto))]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [HttpPut]
-    public async Task<IActionResult> Update(ChildAchievementUpdatingDto childAchievementDto)
+    public async Task<IActionResult> Update(ChildAchievementUpdatingRequestDto childAchievementUpdatingRequestDto)
     {
         string userId = GettingUserProperties.GetUserId(User);
-        var updatedAchive = await service.UpdateAchievement(childAchievementDto, userId);
+        var updatedAchive = await service.UpdateAchievement(childAchievementUpdatingRequestDto, userId);
         return Ok(updatedAchive);
     }
 

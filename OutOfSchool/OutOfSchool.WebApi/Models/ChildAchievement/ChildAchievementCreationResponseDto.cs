@@ -4,7 +4,7 @@ using OutOfSchool.WebApi.Validators;
 
 namespace OutOfSchool.WebApi.Models.ChildAchievement;
 
-public class ChildAchievementCreationDto
+public class ChildAchievementCreationResponseDto
 {
     [Required(ErrorMessage = "Type is required")]
     public int ChildAchievementTypeId { get; set; }

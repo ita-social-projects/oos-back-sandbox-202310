@@ -8,7 +8,7 @@ public class NotFutureAchievementDateAttribute : ValidationAttribute
     {
         var date = (DateTime)value;
 
-        if (date < DateTime.Today)
+        if (date > DateTime.Today)
         {
             return new ValidationResult("Date should be in the future");
         }

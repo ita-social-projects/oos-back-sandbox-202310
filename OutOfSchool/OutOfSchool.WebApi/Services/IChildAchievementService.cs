@@ -4,11 +4,11 @@ namespace OutOfSchool.WebApi.Services;
 
 public interface IChildAchievementService
 {
-    Task<ChildAchievementCreationDto> CreateAchievement(ChildAchievementCreationRequestDto childAchievementCreationRequestDto, string userId);
+    Task<ChildAchievementCreationResponseDto> CreateAchievement(ChildAchievementCreationRequestDto childAchievementCreationRequestDto, string userId);
 
     public Task DeleteAchievement(Guid id, string userId);
 
-    public Task<ChildAchievementUpdatingDto> UpdateAchievement(ChildAchievementUpdatingDto childAchievementDto, string userId);
+    public Task<ChildAchievementUpdatingResponseDto> UpdateAchievement(ChildAchievementUpdatingRequestDto childAchievementUpdatingRequestDto, string userId);
 
     public Task<IEnumerable<ChildAchievementGettingDto>> GetAchievementForChildId(Guid id);
 

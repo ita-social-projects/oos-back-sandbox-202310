@@ -492,13 +492,14 @@ public class MappingProfile : Profile
         CreateMap<WorkshopFilter, WorkshopFilterWithSettlements>()
             .ForMember(dest => dest.SettlementsIds, opt => opt.Ignore());
 
-        CreateMap<ChildAchievement, ChildAchievementUpdatingDto>();
-        CreateMap<ChildAchievement, ChildAchievementCreationDto>();
+        CreateMap<ChildAchievement, ChildAchievementUpdatingResponseDto>();
+        CreateMap<ChildAchievement, ChildAchievementCreationResponseDto>();
         CreateMap<ChildAchievement, ChildAchievementGettingDto>();
-        CreateMap<ChildAchievementUpdatingDto, ChildAchievement>();
-        CreateMap<ChildAchievementCreationDto, ChildAchievement>();
+        CreateMap<ChildAchievementUpdatingResponseDto, ChildAchievement>();
+        CreateMap<ChildAchievementCreationResponseDto, ChildAchievement>();
         CreateMap<ChildAchievementGettingDto, ChildAchievement>();
         CreateMap<ChildAchievementCreationRequestDto, ChildAchievement>();
+        CreateMap<ChildAchievementUpdatingRequestDto, ChildAchievement>();
     }
 
     private IMappingExpression<TSource, TDestination> CreateSoftDeletedMap<TSource, TDestination>()
