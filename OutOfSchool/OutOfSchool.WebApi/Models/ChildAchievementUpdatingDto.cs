@@ -18,6 +18,10 @@ public class ChildAchievementUpdatingDto
     [NotFutureAchievementDate(ErrorMessage = "NotFutureAchievementDateAttribute")]
     public DateTime Date { get; set; }
 
+    [Required(ErrorMessage = "Name is required")]
+    [StringLength(2000, ErrorMessage = "Name cannot exceed 2000 characters")]
+    public string Name { get; set; }
+
     [Required(ErrorMessage = "Trainer is required")]
     public Guid TrainerId { get; set; }
 
