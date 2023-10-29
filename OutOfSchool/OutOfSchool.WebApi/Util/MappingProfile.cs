@@ -491,10 +491,10 @@ public class MappingProfile : Profile
         CreateMap<WorkshopFilter, WorkshopFilterWithSettlements>()
             .ForMember(dest => dest.SettlementsIds, opt => opt.Ignore());
 
-        CreateMap<ChildAchievement, ChildAchievementDto>();
+        CreateMap<ChildAchievement, ChildAchievementUpdatingDto>();
         CreateMap<ChildAchievement, ChildAchievementCreationDto>();
         CreateMap<ChildAchievement, ChildAchievementGettingDto>();
-        CreateMap<ChildAchievementDto, ChildAchievement>();
+        CreateMap<ChildAchievementUpdatingDto, ChildAchievement>();
         CreateMap<ChildAchievementCreationDto, ChildAchievement>();
         CreateMap<ChildAchievementGettingDto, ChildAchievement>();
         

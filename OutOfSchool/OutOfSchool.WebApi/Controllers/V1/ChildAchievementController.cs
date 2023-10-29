@@ -19,7 +19,7 @@ public class ChildAchievementController : ControllerBase
     /// </summary>
     /// <param name="childAchievementCreationDto">Child achievement entity to add.</param>
     /// <returns>The child achievement that was created.</returns>
-    [HasPermission(Permissions.ChildAchievementCreate)]
+    //[HasPermission(Permissions.ChildAchievementCreate)]
     [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(ChildDto))]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -38,7 +38,7 @@ public class ChildAchievementController : ControllerBase
     /// </summary>
     /// <param name="id">The child achievement id.</param>
     /// <returns>If deletion was successful, the result will be Status Code 204.</returns>
-    [HasPermission(Permissions.ChildAchievementDelete)]
+    //[HasPermission(Permissions.ChildAchievementDelete)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -63,7 +63,7 @@ public class ChildAchievementController : ControllerBase
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [HttpPut]
-    public async Task<IActionResult> Update(ChildAchievementDto childAchievementDto)
+    public async Task<IActionResult> Update(ChildAchievementUpdatingDto childAchievementDto)
     {
         var updatedAchive = await service.UpdateAchievement(childAchievementDto);
         return Ok(updatedAchive);
@@ -83,7 +83,12 @@ public class ChildAchievementController : ControllerBase
     [HttpGet("GetForChildId")]
     public async Task<IActionResult> GetForChildId(Guid id)
     {
-        var childAchievements = service.GetAchievementForChildId(id);
+        var childAchievements = await service.GetAchievementForChildId(id);
+        if (childAchievements.Count() == 0)
+        {
+            return NoContent();
+        }
+
         return Ok(childAchievements);
     }
 
@@ -92,7 +97,7 @@ public class ChildAchievementController : ControllerBase
     /// </summary>
     /// <param name="id">Workshop id to get achievement entity.</param>
     /// <returns>The child achievement that was founded.</returns>
-    [AllowAnonymous]
+    //[AllowAnonymous]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(SearchResult<ChildDto>))]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -101,7 +106,12 @@ public class ChildAchievementController : ControllerBase
     [HttpGet("GetForWorkshopId")]
     public async Task<IActionResult> GetForWorkshopId(Guid id)
     {
-        var childAchievements = service.GetAchievementForWorkshopId(id);
+        var childAchievements = await service.GetAchievementForWorkshopId(id);
+        if (childAchievements.Count() == 0)
+        {
+            return NoContent();
+        }
+
         return Ok(childAchievements);
     }
 
@@ -111,7 +121,7 @@ public class ChildAchievementController : ControllerBase
     /// <param name="childId">Child id to get achievement entity.</param>
     /// <param name="workshopId">Workshop id to get achievement entity.</param>
     /// <returns>The child achievement that was founded.</returns>
-    [AllowAnonymous]
+    //[AllowAnonymous]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(SearchResult<ChildDto>))]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -120,7 +130,12 @@ public class ChildAchievementController : ControllerBase
     [HttpGet("GetForChildIdWorkshopId")]
     public async Task<IActionResult> GetForChildIdWorkshopId(Guid childId,Guid workshopId)
     {
-        var childAchievements = service.GetAchievementForWorkshopIdChildId(childId, workshopId);
+        var childAchievements = await service.GetAchievementForWorkshopIdChildId(childId, workshopId);
+
+        if (childAchievements.Count() == 0)
+        {
+            return NoContent();
+        }
         return Ok(childAchievements);
     }
 }

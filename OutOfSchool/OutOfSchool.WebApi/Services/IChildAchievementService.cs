@@ -8,7 +8,7 @@ public interface IChildAchievementService
 
     public Task DeleteAchievement(Guid id);
 
-    public Task<ChildAchievementDto> UpdateAchievement(ChildAchievementDto childAchievementDto);
+    public Task<ChildAchievementUpdatingDto> UpdateAchievement(ChildAchievementUpdatingDto childAchievementDto);
 
     public Task<IEnumerable<ChildAchievementGettingDto>> GetAchievementForChildId(Guid id);
 

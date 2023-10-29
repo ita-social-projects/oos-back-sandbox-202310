@@ -5,8 +5,11 @@ using RequiredAttribute = System.ComponentModel.DataAnnotations.RequiredAttribut
 
 namespace OutOfSchool.WebApi.Models;
 
-public class ChildAchievementDto
+public class ChildAchievementUpdatingDto
 {
+    [Required(ErrorMessage = "Id is required")]
+    public Guid Id { get; set; }
+
     [Required(ErrorMessage = "Type is required")]
     public int ChildAchievementTypeId { get; set; }
 

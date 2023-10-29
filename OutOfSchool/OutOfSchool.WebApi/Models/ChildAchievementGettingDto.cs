@@ -5,6 +5,9 @@ namespace OutOfSchool.WebApi.Models;
 
 public class ChildAchievementGettingDto
 {
+    [Required(ErrorMessage = "Id is required")]
+    public Guid Id { get; set; }
+
     [Required(ErrorMessage = "Type is required")]
     public string Type { get; set; }
 
