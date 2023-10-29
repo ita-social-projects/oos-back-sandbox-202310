@@ -20,7 +20,7 @@ public class ChildAchievementController : ControllerBase
     /// <param name="childAchievementCreationDto">Child achievement entity to add.</param>
     /// <returns>The child achievement that was created.</returns>
     //[HasPermission(Permissions.ChildAchievementCreate)]
-    [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(ChildDto))]
+    [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(ChildAchievementCreationDto))]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
@@ -57,7 +57,7 @@ public class ChildAchievementController : ControllerBase
     /// <param name="childAchievementDto">Child achievement entity to update.</param>
     /// <returns>The child achievement that was updated.</returns>
     //[HasPermission(Permissions.ChildAchievementUpdate)]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ChildDto))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ChildAchievementUpdatingDto))]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
@@ -75,7 +75,7 @@ public class ChildAchievementController : ControllerBase
     /// <param name="id">Child id to get achievement entity.</param>
     /// <returns>The child achievement that was founded.</returns>
     [AllowAnonymous]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(SearchResult<ChildDto>))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(SearchResult<ChildAchievementGettingDto>))]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
@@ -98,7 +98,7 @@ public class ChildAchievementController : ControllerBase
     /// <param name="id">Workshop id to get achievement entity.</param>
     /// <returns>The child achievement that was founded.</returns>
     //[AllowAnonymous]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(SearchResult<ChildDto>))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(SearchResult<ChildAchievementGettingDto>))]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
@@ -122,7 +122,7 @@ public class ChildAchievementController : ControllerBase
     /// <param name="workshopId">Workshop id to get achievement entity.</param>
     /// <returns>The child achievement that was founded.</returns>
     //[AllowAnonymous]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(SearchResult<ChildDto>))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(SearchResult<ChildAchievementGettingDto>))]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
@@ -146,7 +146,7 @@ public class ChildAchievementController : ControllerBase
     /// <param name="workshopId">Workshop id to get achievement entity.</param>
     /// <returns>The child achievements that was founded.</returns>
     //[AllowAnonymous]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(SearchResult<ChildDto>))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(SearchResult<ChildAchievementGettingDto>))]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
