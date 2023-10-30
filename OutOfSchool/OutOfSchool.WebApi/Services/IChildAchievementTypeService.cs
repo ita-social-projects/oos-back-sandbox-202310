@@ -1,10 +1,12 @@
-﻿namespace OutOfSchool.WebApi.Services;
+﻿using OutOfSchool.WebApi.Models.ChildAchievement;
+
+namespace OutOfSchool.WebApi.Services;
 
 public interface IChildAchievementTypeService
 {
     Task<ChildAchievementType> GetById(int id);
 
-    Task<ChildAchievementType> Create(ChildAchievementType childAchievementType);
+    Task<ChildAchievementType> Create(ChildAchievementTypeRequestDto childAchievementTypeRequestDto);
 
     Task Delete(int id);
 
