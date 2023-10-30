@@ -13,7 +13,7 @@ public class ChildAchievementController : ControllerBase
 
     public ChildAchievementController(IChildAchievementService service)
     {
-        this.service = service;
+        this.service = service ?? throw new ArgumentNullException(nameof(service));
     }
 
     /// <summary>
@@ -141,6 +141,7 @@ public class ChildAchievementController : ControllerBase
         {
             return NoContent();
         }
+
         return Ok(childAchievements);
     }
 

@@ -14,7 +14,7 @@ public class ChildAchievementTypeController : ControllerBase
 
     public ChildAchievementTypeController(IChildAchievementTypeService childAchievementTypeService)
     {
-        this.service = childAchievementTypeService;
+        this.service = childAchievementTypeService ?? throw new ArgumentNullException(nameof(childAchievementTypeService));
     }
 
     /// <summary>
