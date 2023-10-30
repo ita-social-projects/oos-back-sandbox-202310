@@ -60,7 +60,7 @@ public class ChildAchievementTypeController : ControllerBase
     /// </summary>
     /// <param name="id">Achievement type id to get achievement type entity.</param>
     /// <returns>The child achievement type that was founded.</returns>
-    [HasPermission(Permissions.ImpersonalDataRead)]
+    [AllowAnonymous]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ChildAchievementType))]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -82,7 +82,7 @@ public class ChildAchievementTypeController : ControllerBase
     /// Get all children achievement types.
     /// </summary>
     /// <returns>The child achievement types that was founded.</returns>
-    [HasPermission(Permissions.ImpersonalDataRead)]
+    [AllowAnonymous]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(SearchResult<ChildAchievementType>))]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]

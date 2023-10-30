@@ -187,11 +187,5 @@ public enum Permissions : short
     ChildAchievementUpdate = 151,
     [Display(GroupName = "ChildAchievement", Name = "Delete", Description = "Permissions to manage system conditions and specific data")]
     ChildAchievementDelete = 152,
-    [Display(GroupName = "ChildAchievementType", Name = "Create", Description = "Permissions to manage system conditions and specific data")]
-    ChildAchievementTypeCreate = 153,
-    [Display(GroupName = "ChildAchievementType", Name = "Get", Description = "Permissions to manage system conditions and specific data")]
-    ChildAchievementTypeGet = 154,
-    [Display(GroupName = "ChildAchievementType", Name = "Delete", Description = "Permissions to manage system conditions and specific data")]
-    ChildAchievementTypeDelete = 155,
     #endregion
 }

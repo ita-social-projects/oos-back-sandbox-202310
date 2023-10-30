@@ -26,7 +26,6 @@ public static class PermissionsSeeder
         Permissions.AreaAdmins, Permissions.AreaAdminAddNew, Permissions.AreaAdminRemove,
         Permissions.AreaAdminEdit, Permissions.AreaAdminRead, Permissions.AreaAdminBlock,
         Permissions.PersonalInfo,
-        Permissions.ChildAchievementTypeCreate, Permissions.ChildAchievementTypeDelete,
     };
 
     private static readonly IEnumerable<Permissions> SeedProviderPermissions = new List<Permissions>
@@ -54,7 +53,6 @@ public static class PermissionsSeeder
         Permissions.WorkshopEdit, Permissions.WorkshopAddNew,
         Permissions.PersonalInfo,
         Permissions.ChildAchievementCreate, Permissions.ChildAchievementUpdate, Permissions.ChildAchievementDelete,
-        Permissions.ChildAchievementTypeGet,
     };
 
     private static readonly IEnumerable<Permissions> SeedMinistryAdminPermissions = new List<Permissions>
