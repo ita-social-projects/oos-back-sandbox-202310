@@ -147,8 +147,6 @@ public class ChildAchievementController : ControllerBase
     /// <summary>
     /// Get all children achievements.
     /// </summary>
-    /// <param name="childId">Child id to get achievement entity.</param>
-    /// <param name="workshopId">Workshop id to get achievement entity.</param>
     /// <returns>The child achievements that was founded.</returns>
     [AllowAnonymous]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(SearchResult<ChildAchievementGettingDto>))]

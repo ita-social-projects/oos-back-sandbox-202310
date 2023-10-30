@@ -238,6 +238,7 @@ public static class Startup
                 : new WorkshopServiceStrategy(sp.GetRequiredService<IWorkshopService>(), sp.GetRequiredService<ILogger<WorkshopServiceStrategy>>());
         });
         services.AddTransient<IChildAchievementService, ChildAchievementService>();
+        services.AddTransient<IChildAchievementTypeService, ChildAchievementTypeService>();
 
         // entities repositories
         services.AddTransient(typeof(IEntityAddOnlyRepository<,>), typeof(EntityRepository<,>));

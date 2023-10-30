@@ -14,7 +14,5 @@ public interface IChildAchievementTypeRepository
 
     Task Delete(int id);
 
-    Task<ChildAchievementType> Update(ChildAchievementType childAchievementType);
-
     Task<IEnumerable<ChildAchievementType>> GetAll();
 }

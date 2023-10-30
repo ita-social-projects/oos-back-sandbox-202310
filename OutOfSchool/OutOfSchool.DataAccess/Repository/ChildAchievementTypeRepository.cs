@@ -35,14 +35,6 @@ public class ChildAchievementTypeRepository : IChildAchievementTypeRepository
         await dbContext.SaveChangesAsync().ConfigureAwait(false);
     }
 
-    public async Task<ChildAchievementType> Update(ChildAchievementType childAchievementType)
-    {
-        dbContext.Entry(childAchievementType).State = EntityState.Modified;
-        await dbContext.SaveChangesAsync().ConfigureAwait(false);
-
-        return await Task.FromResult(childAchievementType).ConfigureAwait(false);
-    }
-
     public async Task<ChildAchievementType> GetById(int id)
     {
         return await dbContext.ChildAchievementTypes.FindAsync(id);

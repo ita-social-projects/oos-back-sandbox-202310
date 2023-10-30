@@ -13,13 +13,14 @@ public class ChildAchievementTypeService : IChildAchievementTypeService
     private readonly ILogger<ChildAchievementTypeService> logger;
     private readonly IMapper mapper;
 
-    public ChildAchievementTypeService(IChildAchievementTypeRepository childAchievementTypeRepository, ILogger<ChildAchievementTypeService> logger)
+    public ChildAchievementTypeService(IChildAchievementTypeRepository childAchievementTypeRepository, ILogger<ChildAchievementTypeService> logger, IMapper mapper)
     {
         this.childAchievementTypeRepository = childAchievementTypeRepository;
         this.logger = logger;
+        this.mapper = mapper;
     }
 
-    public async Task<ChildAchievementType> Create(ChildAchievementTypeRequestDto childAchievementTypeRequestDto)
+    public async Task<ChildAchievementType> CreateAchievementType(ChildAchievementTypeRequestDto childAchievementTypeRequestDto)
     {
         _ = childAchievementTypeRequestDto ?? throw new ArgumentNullException(nameof(childAchievementTypeRequestDto));
 
@@ -43,7 +44,7 @@ public class ChildAchievementTypeService : IChildAchievementTypeService
         return newAchiveType;
     }
 
-    public async Task Delete(int id)
+    public async Task DeleteAchievementType(int id)
     {
         logger.LogDebug(
             $"Started deleting child achievement type with {nameof(id)}:{id}.");
@@ -57,7 +58,7 @@ public class ChildAchievementTypeService : IChildAchievementTypeService
                 $"Child achievement type with Id:{id} was created successfully.");
     }
 
-    public async Task<IEnumerable<ChildAchievementType>> GetAll()
+    public async Task<IEnumerable<ChildAchievementType>> GetAllAchievementTypes()
     {
         logger.LogDebug(
             $"Started getting all child achievement types.");
@@ -67,7 +68,7 @@ public class ChildAchievementTypeService : IChildAchievementTypeService
         return childAchievementsTypes;
     }
 
-    public async Task<ChildAchievementType> GetById(int id)
+    public async Task<ChildAchievementType> GetAchievementTypeById(int id)
     {
         logger.LogDebug(
             $"Started getting child achievement type with{nameof(id)}:{id}.");
@@ -75,32 +76,5 @@ public class ChildAchievementTypeService : IChildAchievementTypeService
         logger.LogDebug(
                 $"Child achievement type was successfully finded.");
         return childAchievementsType;
-    }
-
-    public async Task<ChildAchievementType> Update(ChildAchievementType childAchievementType)
-    {
-        logger.LogDebug(
-            $"Started updation of a new child achievement {nameof(childAchievementType)}:{childAchievementType}.");
-        _ = childAchievementType ?? throw new ArgumentNullException(nameof(childAchievementType));
-
-        var childAchievementsType = await childAchievementTypeRepository.GetById(childAchievementType.Id)
-            ?? throw new ArgumentException(
-                $"Trying to update child achievement type " +
-                $"{nameof(childAchievementType)}:{childAchievementType} was not found.");
-
-        var allAchiveTypes = await childAchievementTypeRepository.GetAll();
-        foreach (ChildAchievementType chT in allAchiveTypes)
-        {
-            if (chT.Type == childAchievementType.Type)
-            {
-                throw new ArgumentException(
-                $"Trying to update child achievement type with same type wich is already exist" +
-                $"{nameof(childAchievementType.Type)}:{childAchievementType.Type}.");
-            }
-        }
-        var updatedAchiveType = await childAchievementTypeRepository.Update(childAchievementType);
-        logger.LogDebug(
-            $"Child achievement type {childAchievementType} was updated successfully.");
-        return updatedAchiveType;
     }
 }

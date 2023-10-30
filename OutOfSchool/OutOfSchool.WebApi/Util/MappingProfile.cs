@@ -500,6 +500,7 @@ public class MappingProfile : Profile
         CreateMap<ChildAchievementGettingDto, ChildAchievement>();
         CreateMap<ChildAchievementCreationRequestDto, ChildAchievement>();
         CreateMap<ChildAchievementUpdatingRequestDto, ChildAchievement>();
+        CreateMap<ChildAchievementTypeRequestDto, ChildAchievementType>();
     }
 
     private IMappingExpression<TSource, TDestination> CreateSoftDeletedMap<TSource, TDestination>()
