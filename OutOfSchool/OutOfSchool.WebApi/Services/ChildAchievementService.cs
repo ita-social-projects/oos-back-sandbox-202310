@@ -1,13 +1,5 @@
 ﻿using AutoMapper;
-using Elastic.CommonSchema;
-using Microsoft.Extensions.Options;
-using Nest;
-using OutOfSchool.ElasticsearchData.Models;
-using OutOfSchool.Services.Models;
-using OutOfSchool.Services.Repository;
 using OutOfSchool.WebApi.Models.ChildAchievement;
-using System.Security.Cryptography;
-using static Nest.JoinField;
 
 namespace OutOfSchool.WebApi.Services;
 

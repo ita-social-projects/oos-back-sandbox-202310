@@ -1,15 +1,15 @@
-﻿using Microsoft.EntityFrameworkCore;
-using OutOfSchool.Services.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using OutOfSchool.Services.Models;
 
 namespace OutOfSchool.Services.Repository;
 public class ChildAchievementRepository : IChildAchievementRepository
 {
     protected readonly OutOfSchoolDbContext dbContext;
+
     public ChildAchievementRepository(OutOfSchoolDbContext dbContext)
     {
         this.dbContext = dbContext;

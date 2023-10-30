@@ -6,15 +6,15 @@ public interface IChildAchievementService
 {
     Task<ChildAchievementCreationResponseDto> CreateAchievement(ChildAchievementCreationRequestDto childAchievementCreationRequestDto, string userId);
 
-    public Task DeleteAchievement(Guid id, string userId);
+    Task DeleteAchievement(Guid id, string userId);
 
-    public Task<ChildAchievementUpdatingResponseDto> UpdateAchievement(ChildAchievementUpdatingRequestDto childAchievementUpdatingRequestDto, string userId);
+    Task<ChildAchievementUpdatingResponseDto> UpdateAchievement(ChildAchievementUpdatingRequestDto childAchievementUpdatingRequestDto, string userId);
 
-    public Task<IEnumerable<ChildAchievementGettingDto>> GetAchievementForChildId(Guid id);
+    Task<IEnumerable<ChildAchievementGettingDto>> GetAchievementForChildId(Guid id);
 
-    public Task<IEnumerable<ChildAchievementGettingDto>> GetAchievementForWorkshopId(Guid id);
+    Task<IEnumerable<ChildAchievementGettingDto>> GetAchievementForWorkshopId(Guid id);
 
-    public Task<IEnumerable<ChildAchievementGettingDto>> GetAchievementForWorkshopIdChildId(Guid childId, Guid workshopId);
+    Task<IEnumerable<ChildAchievementGettingDto>> GetAchievementForWorkshopIdChildId(Guid childId, Guid workshopId);
 
     Task<IEnumerable<ChildAchievementGettingDto>> GetAll();
 }

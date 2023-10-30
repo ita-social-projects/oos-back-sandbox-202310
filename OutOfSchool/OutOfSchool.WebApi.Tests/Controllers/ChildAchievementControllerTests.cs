@@ -1,23 +1,17 @@
-﻿using Bogus.DataSets;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.Claims;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
-using Nest;
 using NUnit.Framework;
 using OutOfSchool.Common;
 using OutOfSchool.Tests.Common.TestDataGenerators;
 using OutOfSchool.WebApi.Controllers.V1;
-using OutOfSchool.WebApi.Models;
 using OutOfSchool.WebApi.Models.ChildAchievement;
-using OutOfSchool.WebApi.Models.SocialGroup;
 using OutOfSchool.WebApi.Services;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace OutOfSchool.WebApi.Tests.Controllers;
 

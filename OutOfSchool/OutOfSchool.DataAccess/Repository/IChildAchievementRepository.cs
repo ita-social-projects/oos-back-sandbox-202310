@@ -1,9 +1,7 @@
-﻿using OutOfSchool.Services.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
+using OutOfSchool.Services.Models;
 
 namespace OutOfSchool.Services.Repository;
 public interface IChildAchievementRepository

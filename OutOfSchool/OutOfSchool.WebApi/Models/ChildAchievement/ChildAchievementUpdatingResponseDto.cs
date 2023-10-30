@@ -1,6 +1,5 @@
-﻿using Microsoft.Build.Framework;
+﻿using System.ComponentModel.DataAnnotations;
 using OutOfSchool.WebApi.Validators;
-using System.ComponentModel.DataAnnotations;
 using RequiredAttribute = System.ComponentModel.DataAnnotations.RequiredAttribute;
 
 namespace OutOfSchool.WebApi.Models.ChildAchievement;

@@ -1,11 +1,7 @@
 ﻿using Bogus;
-using OutOfSchool.WebApi.Models;
 using OutOfSchool.WebApi.Models.ChildAchievement;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace OutOfSchool.Tests.Common.TestDataGenerators;
 public class ChildAchievementGettingDtoGenerator

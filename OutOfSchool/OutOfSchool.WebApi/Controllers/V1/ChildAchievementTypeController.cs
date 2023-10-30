@@ -1,7 +1,4 @@
-﻿using Elastic.CommonSchema;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using OutOfSchool.WebApi.Common;
+﻿using Microsoft.AspNetCore.Mvc;
 using OutOfSchool.WebApi.Models;
 using OutOfSchool.WebApi.Models.ChildAchievement;
 

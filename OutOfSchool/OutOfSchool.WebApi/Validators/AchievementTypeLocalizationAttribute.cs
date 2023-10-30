@@ -1,12 +1,10 @@
-﻿using Microsoft.Extensions.Localization;
+﻿using System.ComponentModel.DataAnnotations;
 using OutOfSchool.WebApi.Enums;
-using System.ComponentModel.DataAnnotations;
 
 namespace OutOfSchool.WebApi.Validators;
 
 public class AchievementTypeLocalizationAttribute : ValidationAttribute
 {
-
     protected override ValidationResult IsValid(object value, ValidationContext validationContext)
     {
         string localization = value as string;

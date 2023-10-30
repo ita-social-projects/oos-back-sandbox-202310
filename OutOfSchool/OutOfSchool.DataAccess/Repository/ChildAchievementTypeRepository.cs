@@ -1,10 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
-using OutOfSchool.Services.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using OutOfSchool.Services.Models;
 
 namespace OutOfSchool.Services.Repository;
 public class ChildAchievementTypeRepository : IChildAchievementTypeRepository

@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using RequiredAttribute = System.ComponentModel.DataAnnotations.RequiredAttribute;
-using OutOfSchool.WebApi.Validators;
 
 namespace OutOfSchool.WebApi.Models.ChildAchievement;
 

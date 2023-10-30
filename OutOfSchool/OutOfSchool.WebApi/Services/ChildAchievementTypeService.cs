@@ -1,9 +1,5 @@
 ﻿using AutoMapper;
-using Nest;
-using OutOfSchool.Services.Models;
-using OutOfSchool.Services.Repository;
 using OutOfSchool.WebApi.Models.ChildAchievement;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace OutOfSchool.WebApi.Services;
 
