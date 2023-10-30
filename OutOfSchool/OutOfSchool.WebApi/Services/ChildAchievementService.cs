@@ -103,7 +103,7 @@ public class ChildAchievementService : IChildAchievementService
 
         var achi = (await childAchievementRepository.GetById(id).ConfigureAwait(false))
             ?? throw new ArgumentException(
-                $"Trying to delete not existing Child (Id = {id}).");
+                $"Trying to delete not existing Child achievement (Id = {id}).");
 
         var workshop = (await workshopRepository.GetById(achi.WorkshopId).ConfigureAwait(false))
             ?? throw new ArgumentException(

@@ -16,8 +16,40 @@ public class ChildAchievementTypeRepository : IChildAchievementTypeRepository
         this.dbContext = dbContext;
     }
 
+    public async Task<ChildAchievementType> Create(ChildAchievementType childAchievementType)
+    {
+        await dbContext.ChildAchievementTypes.AddAsync(childAchievementType).ConfigureAwait(false);
+        await dbContext.SaveChangesAsync().ConfigureAwait(false);
+
+        return await Task.FromResult(childAchievementType).ConfigureAwait(false);
+    }
+
+    public async Task Delete(int id)
+    {
+        var achiT = await dbContext.ChildAchievementTypes.FindAsync(id);
+        if (achiT != null)
+        {
+            dbContext.ChildAchievementTypes.Remove(achiT);
+        }
+
+        await dbContext.SaveChangesAsync().ConfigureAwait(false);
+    }
+
+    public async Task<ChildAchievementType> Update(ChildAchievementType childAchievementType)
+    {
+        dbContext.Entry(childAchievementType).State = EntityState.Modified;
+        await dbContext.SaveChangesAsync().ConfigureAwait(false);
+
+        return await Task.FromResult(childAchievementType).ConfigureAwait(false);
+    }
+
     public async Task<ChildAchievementType> GetById(int id)
     {
         return await dbContext.ChildAchievementTypes.FindAsync(id);
+    }
+
+    public async Task<IEnumerable<ChildAchievementType>> GetAll()
+    {
+        return await Task.FromResult(await dbContext.ChildAchievementTypes.ToListAsync()).ConfigureAwait(false);
     }
 }
