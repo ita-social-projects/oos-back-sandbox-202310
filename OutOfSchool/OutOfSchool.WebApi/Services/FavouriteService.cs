@@ -18,10 +18,10 @@ public class FavouriteService : IFavouriteService
         IMapper mapper,
         IWorkshopService workshopService)
     {
-        this.favouriteRepository = favouriteRepository;
-        this.logger = logger;
-        this.mapper = mapper;
-        this.workshopService = workshopService;
+        this.favouriteRepository = favouriteRepository ?? throw new ArgumentNullException(nameof(favouriteRepository));
+        this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+        this.workshopService = workshopService ?? throw new ArgumentNullException(nameof(workshopService));
     }
 
     public async Task<FavouriteDto> Create(FavouriteDto dto)
@@ -93,22 +93,5 @@ public class FavouriteService : IFavouriteService
         logger.LogInformation($"Got a Favourite with Id = {id}.");
 
         return mapper.Map<FavouriteDto>(favourite);
-    }
-
-    public async Task<IEnumerable<WorkshopCard>> GetAllByUser(string userId)
-    {
-        logger.LogInformation($"Getting all Favourites by user Id - {userId} started.");
-
-        var favouritesQuery = await favouriteRepository.GetByFilter(favourite => favourite.UserId == userId).ConfigureAwait(false);
-
-        var favourites = favouritesQuery.ToList();
-
-        logger.LogInformation(!favourites.Any()
-            ? "Favourites table is empty."
-            : $"All {favourites.Count} records were successfully received from the Favourite table for user Id - {userId}");
-
-        var favouriteWorkshops = await workshopService.GetByIds(favourites.Select(fav => fav.WorkshopId));
-
-        return favouriteWorkshops.Select(workshop => mapper.Map<WorkshopCard>(workshop)).ToList();
     }
 }
