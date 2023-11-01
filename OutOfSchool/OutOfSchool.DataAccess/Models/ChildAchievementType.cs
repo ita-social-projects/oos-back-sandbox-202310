@@ -1,5 +1,5 @@
 ﻿namespace OutOfSchool.Services.Models;
-public class ChildAchievementType
+public class ChildAchievementType : IKeyedEntity<int>
 {
     public int Id { get; set; }
 

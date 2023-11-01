@@ -49,7 +49,7 @@ public class ChildAchievementTypeService : IChildAchievementTypeService
             ?? throw new ArgumentException(
                 $"Trying to delete not existing achievement type (Id = {id}).");
 
-        await childAchievementTypeRepository.Delete(id);
+        await childAchievementTypeRepository.DeleteById(id);
         logger.LogDebug(
                 $"Child achievement type with Id:{id} was created successfully.");
     }
