@@ -6,24 +6,17 @@ using Microsoft.EntityFrameworkCore;
 using OutOfSchool.Services.Models;
 
 namespace OutOfSchool.Services.Repository;
-public class ChildAchievementRepository : IChildAchievementRepository
+public class ChildAchievementRepository : EntityRepositoryBase<Guid, ChildAchievement>, IChildAchievementRepository
 {
     protected readonly OutOfSchoolDbContext dbContext;
 
     public ChildAchievementRepository(OutOfSchoolDbContext dbContext)
+        : base(dbContext)
     {
         this.dbContext = dbContext;
     }
 
-    public async Task<ChildAchievement> Create(ChildAchievement childAchievement)
-    {
-        await dbContext.ChildAchievements.AddAsync(childAchievement).ConfigureAwait(false);
-        await dbContext.SaveChangesAsync().ConfigureAwait(false);
-
-        return await Task.FromResult(childAchievement).ConfigureAwait(false);
-    }
-
-    public async Task Delete(Guid id)
+    public async Task DeleteById(Guid id)
     {
         var achi = await dbContext.ChildAchievements.FindAsync(id);
         if (achi != null)
@@ -32,11 +25,6 @@ public class ChildAchievementRepository : IChildAchievementRepository
         }
 
         await dbContext.SaveChangesAsync().ConfigureAwait(false);
-    }
-
-    public async Task<ChildAchievement> GetById(Guid id)
-    {
-        return await dbContext.ChildAchievements.FindAsync(id);
     }
 
     public async Task<IEnumerable<ChildAchievement>> GetForChild(Guid id)
@@ -56,18 +44,5 @@ public class ChildAchievementRepository : IChildAchievementRepository
         return await dbContext.ChildAchievements
             .Where(x => x.ChildId == childId && x.WorkshopId == workshopId)
             .ToListAsync();
-    }
-
-    public async Task<ChildAchievement> Update(ChildAchievement childAchievement)
-    {
-        dbContext.Entry(childAchievement).State = EntityState.Modified;
-        await dbContext.SaveChangesAsync().ConfigureAwait(false);
-
-        return await Task.FromResult(childAchievement).ConfigureAwait(false);
-    }
-
-    public async Task<IEnumerable<ChildAchievement>> GetAll()
-    {
-        return await Task.FromResult(await dbContext.ChildAchievements.ToListAsync()).ConfigureAwait(false);
     }
 }

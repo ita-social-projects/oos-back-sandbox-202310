@@ -109,7 +109,7 @@ public class ChildAchievementService : IChildAchievementService
                 $"Trying to delete child the achievement by provider admin wich cant do that.");
         }
 
-        await childAchievementRepository.Delete(id);
+        await childAchievementRepository.DeleteById(id);
         logger.LogDebug(
                 $"Child achievement with Id:{id} was created successfully.");
     }
