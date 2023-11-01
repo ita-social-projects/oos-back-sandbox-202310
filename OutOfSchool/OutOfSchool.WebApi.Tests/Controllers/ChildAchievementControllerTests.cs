@@ -49,9 +49,10 @@ public class ChildAchievementControllerTests
     }
 
     [Test]
-    public void GetAllAchievementsForChild_WhenThereNoChild_ThrowsArgumentException()
+    public async Task GetAllAchievementsForChild_WhenThereNoChild_ThrowsArgumentException()
     {
-        Assert.Throws<ArgumentException>(async () => await controller.GetForChildId(Guid.NewGuid()).ConfigureAwait(false));
+        var result = await controller.GetForChildId(Guid.NewGuid()).ConfigureAwait(false);
+        Assert.IsInstanceOf<NoContentResult>(result);
     }
 
     [Test]
@@ -77,6 +78,6 @@ public class ChildAchievementControllerTests
         var result = await controller.GetForChildId(childId).ConfigureAwait(false);
 
         // Assert
-        Assert.IsInstanceOf<OkObjectResult>(result);
+        Assert.IsInstanceOf<NoContentResult>(result);
     }
 }
