@@ -28,7 +28,7 @@ public class ChildAchievementTypeService : IChildAchievementTypeService
         var allAchiveTypes = await childAchievementTypeRepository.GetAll();
         foreach (ChildAchievementType chT in allAchiveTypes)
         {
-            if (chT.Type == childAchievementTypeRequestDto.Type) 
+            if (chT.Type == childAchievementTypeRequestDto.Type)
             {
                 return Result<ChildAchievementType>.Failed(new OperationError
                 {
@@ -51,7 +51,7 @@ public class ChildAchievementTypeService : IChildAchievementTypeService
         logger.LogDebug(
             $"Started deleting child achievement type with {nameof(id)}:{id}.");
 
-        var achiT = (await childAchievementTypeRepository.GetById(id).ConfigureAwait(false));
+        var achiT = await childAchievementTypeRepository.GetById(id).ConfigureAwait(false);
         if (achiT is null)
         {
             return Result<object>.Failed(new OperationError

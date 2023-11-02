@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Nest;
+using OutOfSchool.Services.Enums;
 using OutOfSchool.WebApi.Common;
 using OutOfSchool.WebApi.Models.Application;
 using OutOfSchool.WebApi.Models.ChildAchievement;
@@ -71,6 +72,17 @@ public class ChildAchievementService : IChildAchievementService
                 Description = $"Trying to create a new child achievement the Application with " +
                 $"{nameof(childAchievementCreationRequestDto.ApplicationId)}: {childAchievementCreationRequestDto.ApplicationId} " +
                 $"was not found.",
+            });
+        }
+
+        if (application.Status != ApplicationStatus.Approved || application.Status != ApplicationStatus.StudyingForYears)
+        {
+            return Result<ChildAchievementCreationResponseDto>.Failed(new OperationError
+            {
+                Code = "400",
+                Description = $"Trying to create a new child achievement the Application status " +
+                $"{nameof(application.Status)}: {application.Status} " +
+                $"is unacceptable.",
             });
         }
 
