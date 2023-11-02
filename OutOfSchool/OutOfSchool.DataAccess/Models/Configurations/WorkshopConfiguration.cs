@@ -23,10 +23,5 @@ internal class WorkshopConfiguration : IEntityTypeConfiguration<Workshop>
         builder.HasMany(x => x.WorkshopDescriptionItems)
             .WithOne(x => x.Workshop)
             .HasForeignKey(x => x.WorkshopId);
-
-        builder.HasMany(x => x.ChildAchievements)
-            .WithOne(x => x.Workshop)
-            .HasForeignKey(x => x.WorkshopId)
-            .HasPrincipalKey(x => x.Id);
     }
 }

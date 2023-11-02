@@ -150,6 +150,7 @@ public class ChildAchievementController : ControllerBase
     /// <returns>The child achievements that was founded.</returns>
     [AllowAnonymous]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(SearchResult<ChildAchievementGettingDto>))]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]

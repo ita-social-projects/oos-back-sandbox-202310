@@ -17,7 +17,4 @@ public class ChildAchievementCreationResponseDto
 
     [Required(ErrorMessage = "Child id is required")]
     public Guid ChildId { get; set; }
-
-    [Required(ErrorMessage = "Workshop id is required")]
-    public Guid WorkshopId { get; set; }
 }

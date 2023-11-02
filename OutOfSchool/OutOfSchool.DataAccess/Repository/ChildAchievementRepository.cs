@@ -35,14 +35,21 @@ public class ChildAchievementRepository : EntityRepositoryBase<Guid, ChildAchiev
 
     public async Task<IEnumerable<ChildAchievement>> GetForWorkshop(Guid id)
     {
-        return await dbContext.ChildAchievements.Where(x => x.WorkshopId == id)
-            .ToListAsync();
+        var teachers = await dbContext.Teachers.Where(x => x.WorkshopId == id).ToListAsync();
+        List<ChildAchievement> result = new List<ChildAchievement>();
+        foreach (Teacher teacher in teachers) 
+        {
+            var teacherAchievements = await dbContext.ChildAchievements.Where(x => x.TrainerId == teacher.Id).ToListAsync();
+            foreach (ChildAchievement ch in teacherAchievements) {
+                result.Add(ch);
+            }
+        }
+
+        return result;
     }
 
     public async Task<IEnumerable<ChildAchievement>> GetForWorkshopChild(Guid childId, Guid workshopId)
     {
-        return await dbContext.ChildAchievements
-            .Where(x => x.ChildId == childId && x.WorkshopId == workshopId)
-            .ToListAsync();
+        return (await GetForWorkshop(workshopId)).Where(x => x.ChildId == childId);
     }
 }

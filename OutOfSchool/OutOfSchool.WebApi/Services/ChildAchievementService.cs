@@ -12,6 +12,7 @@ public class ChildAchievementService : IChildAchievementService
     private readonly ISensitiveEntityRepositorySoftDeleted<Teacher> teacherRepository;
     private readonly IWorkshopRepository workshopRepository;
     private readonly IApplicationRepository applicationRepository;
+    private readonly ITeacherService teacherService;
     private readonly ILogger<ChildAchievementService> logger;
     private readonly IMapper mapper;
 
@@ -23,6 +24,7 @@ public class ChildAchievementService : IChildAchievementService
         ISensitiveEntityRepositorySoftDeleted<Teacher> teacherRepository,
         IWorkshopRepository workshopRepository,
         IApplicationRepository applicationRepository,
+        ITeacherService teacherService,
         ILogger<ChildAchievementService> logger,
         IMapper mapper)
     {
@@ -33,6 +35,7 @@ public class ChildAchievementService : IChildAchievementService
         this.teacherRepository = teacherRepository;
         this.workshopRepository = workshopRepository;
         this.applicationRepository = applicationRepository;
+        this.teacherService = teacherService;
         this.logger = logger;
         this.mapper = mapper;
     }
@@ -75,7 +78,6 @@ public class ChildAchievementService : IChildAchievementService
             {
                 var childAchievement = mapper.Map<ChildAchievement>(childAchievementCreationRequestDto);
                 childAchievement.Date = DateTime.Now;
-                childAchievement.WorkshopId = application.WorkshopId;
                 childAchievement.ChildId = application.ChildId;
                 var newAchive = await childAchievementRepository.Create(childAchievement);
                 logger.LogDebug(
@@ -97,12 +99,8 @@ public class ChildAchievementService : IChildAchievementService
             ?? throw new ArgumentException(
                 $"Trying to delete not existing Child achievement (Id = {id}).");
 
-        var workshop = (await workshopRepository.GetById(achi.WorkshopId).ConfigureAwait(false))
-            ?? throw new ArgumentException(
-                $"Trying to delete a new child achievement the Workshop with " +
-                $"{nameof(achi.WorkshopId)}:{achi.WorkshopId} was not found.");
-
         var admin = (await providerAdminRepository.GetByFilter(p => p.UserId == userId).ConfigureAwait(false)).SingleOrDefault();
+        var workshop = await workshopRepository.GetById(await teacherService.GetTeachersWorkshopId(achi.TrainerId));
         if (admin.ProviderId != workshop.ProviderId)
         {
             throw new UnauthorizedAccessException(
@@ -225,7 +223,6 @@ public class ChildAchievementService : IChildAchievementService
             if (t.Id == childAchievementUpdatingRequestDto.TrainerId)
             {
                 var childAchievement = mapper.Map<ChildAchievement>(childAchievementUpdatingRequestDto);
-                childAchievement.WorkshopId = application.WorkshopId;
                 childAchievement.ChildId = application.ChildId;
                 var updatedAchive = await childAchievementRepository.Update(childAchievement);
                 logger.LogDebug(
