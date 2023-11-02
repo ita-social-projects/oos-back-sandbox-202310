@@ -51,7 +51,7 @@ public class ChildAchievementService : IChildAchievementService
             $"Started creation of a new child achievement {nameof(childAchievementCreationRequestDto)}:{childAchievementCreationRequestDto}.");
 
         var type = await childAchievementTypeRepository.GetById(childAchievementCreationRequestDto.ChildAchievementTypeId).ConfigureAwait(false);
-        if (type is null) 
+        if (type is null)
         {
             return Result<ChildAchievementCreationResponseDto>.Failed(new OperationError
             {
@@ -131,7 +131,7 @@ public class ChildAchievementService : IChildAchievementService
         logger.LogDebug(
             $"Started deleting child achievement with {nameof(id)}:{id}.");
 
-        var achi = (await childAchievementRepository.GetById(id).ConfigureAwait(false));
+        var achi = await childAchievementRepository.GetById(id).ConfigureAwait(false);
         if (achi is null)
         {
             return Result<object>.Failed(new OperationError
@@ -170,8 +170,8 @@ public class ChildAchievementService : IChildAchievementService
         }
 
         var childAchievements = await childAchievementRepository.GetForChild(id);
-        List <ChildAchievementGettingDto> childAchievementsDto = new List<ChildAchievementGettingDto>();
-        foreach (ChildAchievement ch in childAchievements) 
+        List<ChildAchievementGettingDto> childAchievementsDto = new List<ChildAchievementGettingDto>();
+        foreach (ChildAchievement ch in childAchievements)
         {
             childAchievementsDto.Add(mapper.Map<ChildAchievementGettingDto>(ch));
             var type = await childAchievementTypeRepository.GetById(ch.ChildAchievementTypeId);
@@ -189,7 +189,7 @@ public class ChildAchievementService : IChildAchievementService
     {
         logger.LogDebug(
             $"Started getting child achievement with {nameof(id)}:{id}.");
-        var workshop = (await workshopRepository.GetById(id).ConfigureAwait(false));
+        var workshop = await workshopRepository.GetById(id).ConfigureAwait(false);
         if (workshop is null)
         {
             return Result<IEnumerable<ChildAchievementGettingDto>>.Failed(new OperationError
@@ -273,7 +273,7 @@ public class ChildAchievementService : IChildAchievementService
             $"Started updation of a new child achievement {nameof(childAchievementUpdatingRequestDto)}:{childAchievementUpdatingRequestDto}.");
         _ = childAchievementUpdatingRequestDto ?? throw new ArgumentNullException(nameof(childAchievementUpdatingRequestDto));
 
-        var type = (await childAchievementTypeRepository.GetById(childAchievementUpdatingRequestDto.ChildAchievementTypeId).ConfigureAwait(false));
+        var type = await childAchievementTypeRepository.GetById(childAchievementUpdatingRequestDto.ChildAchievementTypeId).ConfigureAwait(false);
         if (type is null)
         {
             return Result<ChildAchievementUpdatingResponseDto>.Failed(new OperationError
@@ -285,7 +285,7 @@ public class ChildAchievementService : IChildAchievementService
             });
         }
 
-        var application = (await applicationRepository.GetById(childAchievementUpdatingRequestDto.ApplicationId).ConfigureAwait(false));
+        var application = await applicationRepository.GetById(childAchievementUpdatingRequestDto.ApplicationId).ConfigureAwait(false);
         if (application is null)
         {
             return Result<ChildAchievementUpdatingResponseDto>.Failed(new OperationError
@@ -296,7 +296,7 @@ public class ChildAchievementService : IChildAchievementService
             });
         }
 
-        var child = (await childRepository.GetById(application.ChildId).ConfigureAwait(false));
+        var child = await childRepository.GetById(application.ChildId).ConfigureAwait(false);
         if (child is null)
         {
             return Result<ChildAchievementUpdatingResponseDto>.Failed(new OperationError
@@ -307,7 +307,7 @@ public class ChildAchievementService : IChildAchievementService
             });
         }
 
-        var workshop = (await workshopRepository.GetById(application.WorkshopId).ConfigureAwait(false));
+        var workshop = await workshopRepository.GetById(application.WorkshopId).ConfigureAwait(false);
         if (child is null)
         {
             return Result<ChildAchievementUpdatingResponseDto>.Failed(new OperationError
@@ -324,6 +324,7 @@ public class ChildAchievementService : IChildAchievementService
             throw new UnauthorizedAccessException(
                 $"Trying to update child the achievement by provider admin wich cant do that.");
         }
+
         foreach (Teacher t in workshop.Teachers)
         {
             if (t.Id == childAchievementUpdatingRequestDto.TrainerId)

@@ -27,7 +27,8 @@ public class ChildAchievementController : ControllerBase
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [HttpPost]
-    public async Task<IActionResult> Create(ChildAchievementCreationRequestDto childAchievementCreationRequestDto) {
+    public async Task<IActionResult> Create(ChildAchievementCreationRequestDto childAchievementCreationRequestDto)
+    {
         string userId = GettingUserProperties.GetUserId(User);
         var newAchive = await service.CreateAchievement(childAchievementCreationRequestDto, userId);
         if (!newAchive.Succeeded)
@@ -157,7 +158,7 @@ public class ChildAchievementController : ControllerBase
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [HttpGet("GetForChildIdWorkshopId")]
-    public async Task<IActionResult> GetForChildIdWorkshopId(Guid childId,Guid workshopId)
+    public async Task<IActionResult> GetForChildIdWorkshopId(Guid childId, Guid workshopId)
     {
         var childAchievements = await service.GetAchievementForWorkshopIdChildId(childId, workshopId);
         if (!childAchievements.Succeeded)
