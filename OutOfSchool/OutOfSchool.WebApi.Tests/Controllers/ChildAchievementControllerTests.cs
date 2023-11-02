@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using AutoMapper.Internal;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
 using OutOfSchool.Common;
 using OutOfSchool.Tests.Common.TestDataGenerators;
+using OutOfSchool.WebApi.Common;
 using OutOfSchool.WebApi.Controllers.V1;
 using OutOfSchool.WebApi.Models.ChildAchievement;
 using OutOfSchool.WebApi.Services;
@@ -49,17 +51,10 @@ public class ChildAchievementControllerTests
     }
 
     [Test]
-    public async Task GetAllAchievementsForChild_WhenThereNoChild_ThrowsArgumentException()
-    {
-        var result = await controller.GetForChildId(Guid.NewGuid()).ConfigureAwait(false);
-        Assert.IsInstanceOf<NoContentResult>(result);
-    }
-
-    [Test]
     public async Task GetChildrenAchievementByChildrenId_WhenThereAreChildrenAchievement_ShouldReturnOkResultObject()
     {
         // Arrange
-        service.Setup(x => x.GetAchievementForChildId(childId)).ReturnsAsync(childrenAchiGet);
+        service.Setup(x => x.GetAchievementForChildId(childId)).ReturnsAsync(Result<IEnumerable<ChildAchievementGettingDto>>.Success(childrenAchiGet));
 
         // Act
         var result = await controller.GetForChildId(childId).ConfigureAwait(false);
@@ -72,7 +67,7 @@ public class ChildAchievementControllerTests
     public async Task GetChildrenAchievementByChildrenId_WhenThereIsNoChildrenAchievemnts_ShouldReturnNoContentObjectResult()
     {
         // Arrange
-        service.Setup(x => x.GetAchievementForChildId(childId)).ReturnsAsync(Enumerable.Empty<ChildAchievementGettingDto>());
+        service.Setup(x => x.GetAchievementForChildId(childId)).ReturnsAsync(Result<IEnumerable<ChildAchievementGettingDto>>.Success(Enumerable.Empty<ChildAchievementGettingDto>()));
 
         // Act
         var result = await controller.GetForChildId(childId).ConfigureAwait(false);

@@ -13,8 +13,7 @@ public class ChildAchievementGettingDtoGenerator
         .RuleFor(x => x.Name, f => f.Person.FirstName)
         .RuleFor(x => x.Trainer, f => f.Person.FirstName)
         .RuleFor(x => x.TrainerId, _ => Guid.NewGuid())
-        .RuleFor(x => x.ChildId, _ => Guid.NewGuid())
-        .RuleFor(x =>x.WorkshopId, _ => Guid.NewGuid());
+        .RuleFor(x => x.ChildId, _ => Guid.NewGuid());
 
     public static ChildAchievementGettingDto Generate() => faker.Generate();
 
