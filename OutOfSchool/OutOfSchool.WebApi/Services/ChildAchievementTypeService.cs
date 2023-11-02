@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using OutOfSchool.Services.Models;
+using OutOfSchool.WebApi.Common;
 using OutOfSchool.WebApi.Models.ChildAchievement;
 
 namespace OutOfSchool.WebApi.Services;
@@ -16,7 +18,7 @@ public class ChildAchievementTypeService : IChildAchievementTypeService
         this.mapper = mapper;
     }
 
-    public async Task<ChildAchievementType> CreateAchievementType(ChildAchievementTypeRequestDto childAchievementTypeRequestDto)
+    public async Task<Result<ChildAchievementType>> CreateAchievementType(ChildAchievementTypeRequestDto childAchievementTypeRequestDto)
     {
         _ = childAchievementTypeRequestDto ?? throw new ArgumentNullException(nameof(childAchievementTypeRequestDto));
 
@@ -26,10 +28,14 @@ public class ChildAchievementTypeService : IChildAchievementTypeService
         var allAchiveTypes = await childAchievementTypeRepository.GetAll();
         foreach (ChildAchievementType chT in allAchiveTypes)
         {
-            if (chT.Type == childAchievementTypeRequestDto.Type) {
-                throw new ArgumentException(
-                $"Trying to create a new child achievement type with same type wich is already exist" +
-                $"{nameof(childAchievementTypeRequestDto.Type)}:{childAchievementTypeRequestDto.Type}.");
+            if (chT.Type == childAchievementTypeRequestDto.Type) 
+            {
+                return Result<ChildAchievementType>.Failed(new OperationError
+                {
+                    Code = "400",
+                    Description = $"Trying to create a new child achievement type with same type wich is already exist" +
+                        $"{nameof(childAchievementTypeRequestDto.Type)}:{childAchievementTypeRequestDto.Type}.",
+                });
             }
         }
 
@@ -37,40 +43,47 @@ public class ChildAchievementTypeService : IChildAchievementTypeService
         var newAchiveType = await childAchievementTypeRepository.Create(childAchiveType);
         logger.LogDebug(
             $"Child achievement type {newAchiveType} was created successfully.");
-        return newAchiveType;
+        return Result<ChildAchievementType>.Success(newAchiveType);
     }
 
-    public async Task DeleteAchievementType(int id)
+    public async Task<Result<object>> DeleteAchievementType(int id)
     {
         logger.LogDebug(
             $"Started deleting child achievement type with {nameof(id)}:{id}.");
 
-        var achiT = (await childAchievementTypeRepository.GetById(id).ConfigureAwait(false))
-            ?? throw new ArgumentException(
-                $"Trying to delete not existing achievement type (Id = {id}).");
+        var achiT = (await childAchievementTypeRepository.GetById(id).ConfigureAwait(false));
+        if (achiT is null)
+        {
+            return Result<object>.Failed(new OperationError
+            {
+                Code = "400",
+                Description = $"Trying to delete not existing achievement type (Id = {id}).",
+            });
+        }
 
         await childAchievementTypeRepository.DeleteById(id);
         logger.LogDebug(
                 $"Child achievement type with Id:{id} was created successfully.");
+        return Result<object>.Success(null);
     }
 
-    public async Task<IEnumerable<ChildAchievementType>> GetAllAchievementTypes()
+    public async Task<Result<IEnumerable<ChildAchievementType>>> GetAllAchievementTypes()
     {
         logger.LogDebug(
             $"Started getting all child achievement types.");
         var childAchievementsTypes = await childAchievementTypeRepository.GetAll();
         logger.LogDebug(
                 $"All child achievements was successfully finded.");
-        return childAchievementsTypes;
+        return Result<IEnumerable<ChildAchievementType>>.Success(childAchievementsTypes);
     }
 
-    public async Task<ChildAchievementType> GetAchievementTypeById(int id)
+    public async Task<Result<ChildAchievementType>> GetAchievementTypeById(int id)
     {
         logger.LogDebug(
             $"Started getting child achievement type with{nameof(id)}:{id}.");
         var childAchievementsType = await childAchievementTypeRepository.GetById(id);
         logger.LogDebug(
                 $"Child achievement type was successfully finded.");
-        return childAchievementsType;
+        return Result<ChildAchievementType>.Success(childAchievementsType);
     }
 }

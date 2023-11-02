@@ -30,6 +30,11 @@ public class ChildAchievementController : ControllerBase
     public async Task<IActionResult> Create(ChildAchievementCreationRequestDto childAchievementCreationRequestDto) {
         string userId = GettingUserProperties.GetUserId(User);
         var newAchive = await service.CreateAchievement(childAchievementCreationRequestDto, userId);
+        if (!newAchive.Succeeded)
+        {
+            return BadRequest(newAchive.OperationResult.Errors.ElementAt(0).Description);
+        }
+
         return Created(
             nameof(newAchive),
             newAchive);
@@ -50,7 +55,12 @@ public class ChildAchievementController : ControllerBase
     public async Task<IActionResult> Delete(Guid id)
     {
         string userId = GettingUserProperties.GetUserId(User);
-        await service.DeleteAchievement(id, userId);
+        var result = await service.DeleteAchievement(id, userId);
+        if (!result.Succeeded)
+        {
+            return BadRequest(result.OperationResult.Errors.ElementAt(0).Description);
+        }
+
         return NoContent();
     }
 
@@ -70,6 +80,11 @@ public class ChildAchievementController : ControllerBase
     {
         string userId = GettingUserProperties.GetUserId(User);
         var updatedAchive = await service.UpdateAchievement(childAchievementUpdatingRequestDto, userId);
+        if (!updatedAchive.Succeeded)
+        {
+            return BadRequest(updatedAchive.OperationResult.Errors.ElementAt(0).Description);
+        }
+
         return Ok(updatedAchive);
     }
 
@@ -88,7 +103,12 @@ public class ChildAchievementController : ControllerBase
     public async Task<IActionResult> GetForChildId(Guid id)
     {
         var childAchievements = await service.GetAchievementForChildId(id);
-        if (childAchievements.Count() == 0)
+        if (!childAchievements.Succeeded)
+        {
+            return BadRequest(childAchievements.OperationResult.Errors.ElementAt(0).Description);
+        }
+
+        if (childAchievements.Value.Count() == 0)
         {
             return NoContent();
         }
@@ -111,7 +131,12 @@ public class ChildAchievementController : ControllerBase
     public async Task<IActionResult> GetForWorkshopId(Guid id)
     {
         var childAchievements = await service.GetAchievementForWorkshopId(id);
-        if (childAchievements.Count() == 0)
+        if (!childAchievements.Succeeded)
+        {
+            return BadRequest(childAchievements.OperationResult.Errors.ElementAt(0).Description);
+        }
+
+        if (childAchievements.Value.Count() == 0)
         {
             return NoContent();
         }
@@ -135,8 +160,12 @@ public class ChildAchievementController : ControllerBase
     public async Task<IActionResult> GetForChildIdWorkshopId(Guid childId,Guid workshopId)
     {
         var childAchievements = await service.GetAchievementForWorkshopIdChildId(childId, workshopId);
+        if (!childAchievements.Succeeded)
+        {
+            return BadRequest(childAchievements.OperationResult.Errors.ElementAt(0).Description);
+        }
 
-        if (childAchievements.Count() == 0)
+        if (childAchievements.Value.Count() == 0)
         {
             return NoContent();
         }
@@ -159,8 +188,12 @@ public class ChildAchievementController : ControllerBase
     public async Task<IActionResult> GetAll()
     {
         var childAchievements = await service.GetAll();
+        if (!childAchievements.Succeeded)
+        {
+            return BadRequest(childAchievements.OperationResult.Errors.ElementAt(0).Description);
+        }
 
-        if (childAchievements.Count() == 0)
+        if (childAchievements.Value.Count() == 0)
         {
             return NoContent();
         }

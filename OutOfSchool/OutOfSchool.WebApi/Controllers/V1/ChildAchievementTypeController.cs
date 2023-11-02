@@ -29,6 +29,11 @@ public class ChildAchievementTypeController : ControllerBase
     public async Task<IActionResult> Create(ChildAchievementTypeRequestDto childAchievementTypeRequestDto)
     {
         var newAchiveType = await service.CreateAchievementType(childAchievementTypeRequestDto);
+        if (!newAchiveType.Succeeded)
+        {
+            return BadRequest(newAchiveType.OperationResult.Errors.ElementAt(0).Description);
+        }
+
         return Created(
             nameof(newAchiveType),
             newAchiveType);
@@ -48,7 +53,12 @@ public class ChildAchievementTypeController : ControllerBase
     [HttpDelete]
     public async Task<IActionResult> Delete(int id)
     {
-        await service.DeleteAchievementType(id);
+        var result = await service.DeleteAchievementType(id);
+        if (!result.Succeeded)
+        {
+            return BadRequest(result.OperationResult.Errors.ElementAt(0).Description);
+        }
+
         return NoContent();
     }
 
@@ -67,7 +77,12 @@ public class ChildAchievementTypeController : ControllerBase
     public async Task<IActionResult> GetById(int id)
     {
         var childAchievementType = await service.GetAchievementTypeById(id);
-        if (childAchievementType == null)
+        if (!childAchievementType.Succeeded)
+        {
+            return BadRequest(childAchievementType.OperationResult.Errors.ElementAt(0).Description);
+        }
+
+        if (childAchievementType.Value == null)
         {
             return NoContent();
         }
@@ -89,8 +104,12 @@ public class ChildAchievementTypeController : ControllerBase
     public async Task<IActionResult> GetAll()
     {
         var childAchievementTypes = await service.GetAllAchievementTypes();
+        if (!childAchievementTypes.Succeeded)
+        {
+            return BadRequest(childAchievementTypes.OperationResult.Errors.ElementAt(0).Description);
+        }
 
-        if (childAchievementTypes.Count() == 0)
+        if (childAchievementTypes.Value.Count() == 0)
         {
             return NoContent();
         }
