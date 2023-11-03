@@ -307,6 +307,16 @@ public class ChildAchievementService : IChildAchievementService
                 $"{nameof(childAchievementUpdatingRequestDto.ApplicationId)}:{childAchievementUpdatingRequestDto.ApplicationId} was not found.",
             });
         }
+        if (application.Status != ApplicationStatus.Approved || application.Status != ApplicationStatus.StudyingForYears)
+        {
+            return Result<ChildAchievementUpdatingResponseDto>.Failed(new OperationError
+            {
+                Code = "400",
+                Description = $"Trying to update child achievement the Application status " +
+                $"{nameof(application.Status)}: {application.Status} " +
+                $"is unacceptable.",
+            });
+        }
 
         var child = await childRepository.GetById(application.ChildId).ConfigureAwait(false);
         if (child is null)
