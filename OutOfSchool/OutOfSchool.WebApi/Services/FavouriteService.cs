@@ -11,17 +11,20 @@ public class FavouriteService : IFavouriteService
     private readonly ILogger<FavouriteService> logger;
     private readonly IMapper mapper;
     private readonly IWorkshopService workshopService;
+    private readonly IUserService userService;
 
     public FavouriteService(
         IEntityRepository<Guid, Favourite> favouriteRepository,
         ILogger<FavouriteService> logger,
         IMapper mapper,
-        IWorkshopService workshopService)
+        IWorkshopService workshopService,
+        IUserService userService)
     {
         this.favouriteRepository = favouriteRepository ?? throw new ArgumentNullException(nameof(favouriteRepository));
         this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         this.workshopService = workshopService ?? throw new ArgumentNullException(nameof(workshopService));
+        this.userService = userService;
     }
 
     public async Task<FavouriteDto> Create(FavouriteDto dto)
@@ -31,8 +34,13 @@ public class FavouriteService : IFavouriteService
 
         var favourite = mapper.Map<Favourite>(dto);
         favourite.Id = default;
-        favourite.WorkshopId = dto.WorkshopId;
-        favourite.UserId = dto.UserId;
+
+        var workshop = await workshopService.GetById(favourite.WorkshopId);
+        await userService.GetById(favourite.UserId);
+        if (workshop is null)
+        {
+            throw new ArgumentException($"There is no workshop with id - {favourite.WorkshopId}.");
+        }
 
         var newFavourite = await favouriteRepository.Create(favourite).ConfigureAwait(false);
 
