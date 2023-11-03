@@ -52,6 +52,7 @@ public static class PermissionsSeeder
         Permissions.UserRead, Permissions.UserEdit,
         Permissions.WorkshopEdit, Permissions.WorkshopAddNew,
         Permissions.PersonalInfo,
+        Permissions.ChildAchievementCreate, Permissions.ChildAchievementUpdate, Permissions.ChildAchievementDelete,
     };
 
     private static readonly IEnumerable<Permissions> SeedMinistryAdminPermissions = new List<Permissions>

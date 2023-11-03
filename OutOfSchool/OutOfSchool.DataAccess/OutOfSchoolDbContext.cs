@@ -96,6 +96,10 @@ public partial class OutOfSchoolDbContext : IdentityDbContext<User>, IDataProtec
 
     public DbSet<QuartzJob> QuartzJobs { get; set; }
 
+    public DbSet<ChildAchievement> ChildAchievements { get; set; }
+
+    public DbSet<ChildAchievementType> ChildAchievementTypes { get; set; }
+
     public async Task<int> CompleteAsync() => await this.SaveChangesAsync();
 
     public int Complete() => this.SaveChanges();

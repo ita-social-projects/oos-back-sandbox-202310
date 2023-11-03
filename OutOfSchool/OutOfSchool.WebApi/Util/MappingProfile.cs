@@ -7,6 +7,7 @@ using OutOfSchool.WebApi.Models.Application;
 using OutOfSchool.WebApi.Models.BlockedProviderParent;
 using OutOfSchool.WebApi.Models.Changes;
 using OutOfSchool.WebApi.Models.ChatWorkshop;
+using OutOfSchool.WebApi.Models.ChildAchievement;
 using OutOfSchool.WebApi.Models.Codeficator;
 using OutOfSchool.WebApi.Models.Geocoding;
 using OutOfSchool.WebApi.Models.Notifications;
@@ -490,6 +491,16 @@ public class MappingProfile : Profile
 
         CreateMap<WorkshopFilter, WorkshopFilterWithSettlements>()
             .ForMember(dest => dest.SettlementsIds, opt => opt.Ignore());
+
+        CreateMap<ChildAchievement, ChildAchievementUpdatingResponseDto>();
+        CreateMap<ChildAchievement, ChildAchievementCreationResponseDto>();
+        CreateMap<ChildAchievement, ChildAchievementGettingDto>();
+        CreateMap<ChildAchievementUpdatingResponseDto, ChildAchievement>();
+        CreateMap<ChildAchievementCreationResponseDto, ChildAchievement>();
+        CreateMap<ChildAchievementGettingDto, ChildAchievement>();
+        CreateMap<ChildAchievementCreationRequestDto, ChildAchievement>();
+        CreateMap<ChildAchievementUpdatingRequestDto, ChildAchievement>();
+        CreateMap<ChildAchievementTypeRequestDto, ChildAchievementType>();
     }
 
     private IMappingExpression<TSource, TDestination> CreateSoftDeletedMap<TSource, TDestination>()

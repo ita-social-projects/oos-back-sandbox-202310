@@ -38,5 +38,10 @@ internal class ChildConfiguration : IEntityTypeConfiguration<Child>
 
         builder.Property(x => x.PlaceOfStudy)
             .HasMaxLength(500);
+
+        builder.HasMany(x => x.ChildAchievements)
+            .WithOne(x => x.Child)
+            .HasForeignKey(x => x.ChildId)
+            .HasPrincipalKey(x => x.Id);
     }
 }

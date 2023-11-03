@@ -2,17 +2,19 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using OutOfSchool.Services;
 
 #nullable disable
 
-namespace OutOfSchool.IdentityServer.Data.Migrations.OutOfSchoolMigrations
+namespace OutOfSchool.Migrations.Data.Migrations.OutOfSchoolMigrations
 {
     [DbContext(typeof(OutOfSchoolDbContext))]
-    partial class OutOfSchoolDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231025203439_AchievementsAdd")]
+    partial class AchievementsAdd
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -586,43 +588,28 @@ namespace OutOfSchool.IdentityServer.Data.Migrations.OutOfSchoolMigrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("binary(16)");
 
-                    b.Property<int>("ChildAchievementTypeId")
-                        .HasColumnType("int");
-
                     b.Property<Guid>("ChildId")
                         .HasColumnType("binary(16)");
 
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("Trainer")
                         .HasColumnType("longtext");
 
-                    b.Property<Guid>("TrainerId")
+                    b.Property<string>("Type")
+                        .HasColumnType("longtext");
+
+                    b.Property<Guid>("WorkshopId")
                         .HasColumnType("binary(16)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ChildId");
 
+                    b.HasIndex("WorkshopId");
+
                     b.ToTable("ChildAchievements");
-                });
-
-            modelBuilder.Entity("OutOfSchool.Services.Models.ChildAchievementType", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<string>("Localization")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Type")
-                        .HasColumnType("longtext");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("ChildAchievementTypes");
                 });
 
             modelBuilder.Entity("OutOfSchool.Services.Models.CompanyInformation", b =>
@@ -1004,7 +991,7 @@ namespace OutOfSchool.IdentityServer.Data.Migrations.OutOfSchoolMigrations
                         {
                             Id = 4L,
                             Description = "provider admin permissions",
-                            PackedPermissions = "e\n26HGIFPQ[\\T",
+                            PackedPermissions = "e\n26HGIFPQ[\\T",
                             RoleName = "ProviderAdmin"
                         },
                         new
@@ -2219,7 +2206,15 @@ namespace OutOfSchool.IdentityServer.Data.Migrations.OutOfSchoolMigrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("OutOfSchool.Services.Models.Workshop", "Workshop")
+                        .WithMany("ChildAchievements")
+                        .HasForeignKey("WorkshopId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Child");
+
+                    b.Navigation("Workshop");
                 });
 
             modelBuilder.Entity("OutOfSchool.Services.Models.CompanyInformationItem", b =>
@@ -2519,6 +2514,8 @@ namespace OutOfSchool.IdentityServer.Data.Migrations.OutOfSchoolMigrations
                     b.Navigation("Applications");
 
                     b.Navigation("ChatRooms");
+
+                    b.Navigation("ChildAchievements");
 
                     b.Navigation("DateTimeRanges");
 
