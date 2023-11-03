@@ -179,4 +179,13 @@ public enum Permissions : short
     [Display(GroupName = "AreaAdmin", Name = "Block", Description = "Can block area admin")]
     AreaAdminBlock = 145,
     #endregion
+
+    #region Child achievement access permission #15
+    [Display(GroupName = "ChildAchievement", Name = "Create", Description = "Permissions to create new children achievement")]
+    ChildAchievementCreate = 150,
+    [Display(GroupName = "ChildAchievement", Name = "Update", Description = "Permissions to update children achievement")]
+    ChildAchievementUpdate = 151,
+    [Display(GroupName = "ChildAchievement", Name = "Delete", Description = "Permissions to delete children achievement")]
+    ChildAchievementDelete = 152,
+    #endregion
 }

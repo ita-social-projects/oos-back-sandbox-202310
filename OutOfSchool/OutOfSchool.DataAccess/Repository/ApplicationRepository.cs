@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -82,5 +83,12 @@ public class ApplicationRepository : EntityRepositorySoftDeleted<Guid, Applicati
                 (int)ApplicationStatus.StudyingForYears,
                 (int)ApplicationStatus.Approved)
             .ConfigureAwait(false);
+    }
+
+    public async Task<IEnumerable<Application>> GetForWorkshopChild(Guid childId, Guid workshopId)
+    {
+        return await dbContext.Applications
+            .Where(x => x.ChildId == childId && x.WorkshopId == workshopId)
+            .ToListAsync();
     }
 }

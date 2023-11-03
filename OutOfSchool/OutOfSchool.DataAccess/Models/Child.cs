@@ -36,4 +36,6 @@ public class Child : IKeyedEntity<Guid>, ISoftDeleted
     public virtual Parent Parent { get; set; }
 
     public virtual List<SocialGroup> SocialGroups { get; set; }
+
+    public virtual ICollection<ChildAchievement> ChildAchievements { get; set; }
 }

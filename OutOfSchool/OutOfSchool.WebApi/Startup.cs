@@ -238,6 +238,8 @@ public static class Startup
                     sp.GetRequiredService<IMapper>())
                 : new WorkshopServiceStrategy(sp.GetRequiredService<IWorkshopService>(), sp.GetRequiredService<ILogger<WorkshopServiceStrategy>>());
         });
+        services.AddTransient<IChildAchievementService, ChildAchievementService>();
+        services.AddTransient<IChildAchievementTypeService, ChildAchievementTypeService>();
 
         // entities repositories
         services.AddTransient(typeof(IEntityAddOnlyRepository<,>), typeof(EntityRepository<,>));
@@ -274,6 +276,8 @@ public static class Startup
         services.AddTransient<ICurrentUserService, CurrentUserService>();
 
         services.AddTransient<ICodeficatorRepository, CodeficatorRepository>();
+        services.AddTransient<IChildAchievementRepository, ChildAchievementRepository>();
+        services.AddTransient<IChildAchievementTypeRepository, ChildAchievementTypeRepository>();
 
         services.Configure<ChangesLogConfig>(configuration.GetSection(ChangesLogConfig.Name));
 
