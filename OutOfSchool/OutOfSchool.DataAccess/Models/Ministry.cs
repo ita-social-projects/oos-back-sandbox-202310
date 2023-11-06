@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace OutOfSchool.Services.Models;
-public class Ministry
+public class Ministry : IKeyedEntity<int>
 {
     public int Id { get; set; }
 

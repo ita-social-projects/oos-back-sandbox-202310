@@ -2,7 +2,7 @@
 using OutOfSchool.Services.Enums;
 
 namespace OutOfSchool.Services.Models;
-public class MinistryAdmin :IKeyedEntity<Guid>, ISoftDeleted
+public class MinistryAdmin : IKeyedEntity<Guid>, ISoftDeleted
 {
     public Guid Id { get; set; }
 
