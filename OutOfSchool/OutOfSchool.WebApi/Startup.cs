@@ -240,6 +240,8 @@ public static class Startup
         services.AddTransient<IChildAchievementService, ChildAchievementService>();
         services.AddTransient<IChildAchievementTypeService, ChildAchievementTypeService>();
 
+        services.AddTransient<IMinistryService, MinistryService>();
+
         // entities repositories
         services.AddTransient(typeof(IEntityAddOnlyRepository<,>), typeof(EntityRepository<,>));
         services.AddTransient(typeof(IEntityRepository<,>), typeof(EntityRepository<,>));
@@ -277,6 +279,9 @@ public static class Startup
         services.AddTransient<ICodeficatorRepository, CodeficatorRepository>();
         services.AddTransient<IChildAchievementRepository, ChildAchievementRepository>();
         services.AddTransient<IChildAchievementTypeRepository, ChildAchievementTypeRepository>();
+
+        services.AddTransient<IMinistryRepository, MinistryRepository>();
+        services.AddTransient<IMinistryAdminRepository, MinistryAdminRepository>();
 
         services.Configure<ChangesLogConfig>(configuration.GetSection(ChangesLogConfig.Name));
 
