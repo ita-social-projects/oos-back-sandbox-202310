@@ -241,6 +241,7 @@ public static class Startup
         services.AddTransient<IChildAchievementTypeService, ChildAchievementTypeService>();
 
         services.AddTransient<IMinistryService, MinistryService>();
+        services.AddTransient<IMinistryAdminService, MinistryAdminService>();
 
         // entities repositories
         services.AddTransient(typeof(IEntityAddOnlyRepository<,>), typeof(EntityRepository<,>));

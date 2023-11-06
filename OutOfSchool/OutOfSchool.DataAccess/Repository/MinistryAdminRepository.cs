@@ -22,9 +22,9 @@ public class MinistryAdminRepository : EntityRepositorySoftDeleted<Guid, Ministr
         return base.Create(ministryAdmin);
     }
 
-    public async Task<IEnumerable<ChildAchievement>> GetForMinistryId(int id)
+    public async Task<IEnumerable<MinistryAdmin>> GetForMinistryId(int id)
     {
-        return (IEnumerable<ChildAchievement>)await dbContext.MinistryAdmins.Where(x => x.MinistryId == id)
+        return await dbContext.MinistryAdmins.Where(x => x.MinistryId == id && x.IsDeleted == false)
             .ToListAsync();
     }
 
@@ -33,7 +33,18 @@ public class MinistryAdminRepository : EntityRepositorySoftDeleted<Guid, Ministr
         var min = await db.MinistryAdmins.FindAsync(id);
         if (min != null)
         {
-            dbContext.MinistryAdmins.Remove(min);
+            dbContext.Entry(min).State = EntityState.Deleted;
+        }
+
+        await dbContext.SaveChangesAsync().ConfigureAwait(false);
+    }
+
+    public async Task Approve(Guid id)
+    {
+        var min = await db.MinistryAdmins.FindAsync(id);
+        if (min != null)
+        {
+            min.Status = Enums.MinistryAdminStatus.Approved;
         }
 
         await dbContext.SaveChangesAsync().ConfigureAwait(false);
