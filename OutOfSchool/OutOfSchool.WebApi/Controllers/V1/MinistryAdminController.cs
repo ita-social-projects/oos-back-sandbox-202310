@@ -24,6 +24,7 @@ public class MinistryAdminController : ControllerBase
     /// </summary>
     /// <param name="ministryAdminCreationRequestDto">Ministery admin entity to add.</param>
     /// <returns>The ministery admin that was created.</returns>
+    [HasPermission(Permissions.SystemManagement)]
     [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(MinistryAdminCreationResponseDto))]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -48,6 +49,7 @@ public class MinistryAdminController : ControllerBase
     /// </summary>
     /// <param name="id">The ministery admin id.</param>
     /// <returns>If deletion was successful, the result will be Status Code 204.</returns>
+    [HasPermission(Permissions.SystemManagement)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -70,6 +72,7 @@ public class MinistryAdminController : ControllerBase
     /// </summary>
     /// <param name="ministryAdminUpdatingDto">Ministery admin entity to update.</param>
     /// <returns>The ministery admin that was updated.</returns>
+    [HasPermission(Permissions.SystemManagement)]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(MinistryAdminUpdatingDto))]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -92,6 +95,7 @@ public class MinistryAdminController : ControllerBase
     /// </summary>
     /// <param name="id">Ministery admin id.</param>
     /// <returns>If approve was successful, the result will be Status Code 200.</returns>
+    [HasPermission(Permissions.SystemManagement)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -113,6 +117,7 @@ public class MinistryAdminController : ControllerBase
     /// Get all ministery admins.
     /// </summary>
     /// <returns>The ministery admins that was founded.</returns>
+    [HasPermission(Permissions.SystemManagement)]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(SearchResult<MinistryAdminGettingDto>))]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -141,6 +146,7 @@ public class MinistryAdminController : ControllerBase
     /// </summary>
     /// <param name="id">Ministery id to get ministery admins entities.</param>
     /// <returns>The ministery admins that was founded.</returns>
+    [HasPermission(Permissions.SystemManagement)]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(SearchResult<MinistryAdminGettingDto>))]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -168,6 +174,7 @@ public class MinistryAdminController : ControllerBase
     /// </summary>
     /// <param name="id">Id to get ministery admins entities.</param>
     /// <returns>The ministery admins that was founded.</returns>
+    [HasPermission(Permissions.SystemManagement)]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(SearchResult<MinistryAdminGettingDto>))]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]

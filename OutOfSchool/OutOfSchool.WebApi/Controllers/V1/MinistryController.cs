@@ -21,6 +21,7 @@ public class MinistryController : ControllerBase
     /// </summary>
     /// <param name="ministryCreationRequestDto">Ministry entity to add.</param>
     /// <returns>Ministry that was created.</returns>
+    [HasPermission(Permissions.SystemManagement)]
     [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(MinistryCreationResponseDto))]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -45,6 +46,7 @@ public class MinistryController : ControllerBase
     /// </summary>
     /// <param name="id">The ministry id.</param>
     /// <returns>If deletion was successful, the result will be Status Code 204.</returns>
+    [HasPermission(Permissions.SystemManagement)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -67,7 +69,7 @@ public class MinistryController : ControllerBase
     /// </summary>
     /// <param name="id">Ministry id to get ministry entity.</param>
     /// <returns>The ministry that was founded.</returns>
-    [AllowAnonymous]
+    [HasPermission(Permissions.SystemManagement)]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(MinistryGettingDto))]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
