@@ -21,7 +21,7 @@ public class MinistryAdminCreationRequestDto
     public string PhoneNumber { get; set; }
 
     [Required(ErrorMessage = "Settlement is required")]
-    public string Settlement { get; set; }
+    public int SettlementId { get; set; }
 
     [EmailAddress(ErrorMessage = "Non valid email address.")]
     public string EmailAddress { get; set; }

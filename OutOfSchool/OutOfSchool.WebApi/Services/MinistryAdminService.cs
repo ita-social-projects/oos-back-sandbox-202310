@@ -12,14 +12,20 @@ public class MinistryAdminService : IMinistryAdminService
 {
     private readonly IMinistryAdminRepository ministryAdminRepository;
     private readonly IMinistryRepository ministryRepository;
+    private readonly ICodeficatorRepository codeficatorRepository;
     private readonly IMapper mapper;
     private readonly ILogger<MinistryAdminService> logger;
 
-    public MinistryAdminService(IMinistryAdminRepository ministryAdminRepository, IMinistryRepository ministryRepository,
-        IMapper mapper, ILogger<MinistryAdminService> logger)
+    public MinistryAdminService(
+        IMinistryAdminRepository ministryAdminRepository,
+        IMinistryRepository ministryRepository,
+        ICodeficatorRepository codeficatorRepository,
+        IMapper mapper,
+        ILogger<MinistryAdminService> logger)
     {
         this.ministryAdminRepository = ministryAdminRepository;
         this.ministryRepository = ministryRepository;
+        this.codeficatorRepository = codeficatorRepository;
         this.mapper = mapper;
         this.logger = logger;
     }
@@ -59,10 +65,22 @@ public class MinistryAdminService : IMinistryAdminService
             });
         }
 
+        if (await codeficatorRepository.GetById(ministryAdminCreationRequestDto.SettlementId) is null) {
+            return Result<MinistryAdminCreationResponseDto>.Failed(new OperationError
+            {
+                Code = "400",
+                Description = $"Trying to create a new ministry admin the Settlement with " +
+                $"{nameof(ministryAdminCreationRequestDto.SettlementId)}:{ministryAdminCreationRequestDto.SettlementId} " +
+                $"was not found.",
+            });
+        }
+
         var ministryAdmin = mapper.Map<MinistryAdmin>(ministryAdminCreationRequestDto);
         ministryAdmin.Status = MinistryAdminStatus.Pending;
-        return Result<MinistryAdminCreationResponseDto>.Success(
-            mapper.Map<MinistryAdminCreationResponseDto>(await ministryAdminRepository.Create(ministryAdmin)));
+
+        var ministryAdminDto = mapper.Map<MinistryAdminCreationResponseDto>(await ministryAdminRepository.Create(ministryAdmin));
+        ministryAdminDto.Settlement = codeficatorRepository.GetById(ministryAdminCreationRequestDto.SettlementId).Result.Name;
+        return Result<MinistryAdminCreationResponseDto>.Success(ministryAdminDto);
     }
 
     public async Task<Result<object>> Delete(Guid id)
@@ -125,6 +143,17 @@ public class MinistryAdminService : IMinistryAdminService
             });
         }
 
+        if (await codeficatorRepository.GetById(ministryAdminUpdatingDto.SettlementId) is null)
+        {
+            return Result<MinistryAdminUpdatingDto>.Failed(new OperationError
+            {
+                Code = "400",
+                Description = $"Trying to create a new ministry admin the Settlement with " +
+                $"{nameof(ministryAdminUpdatingDto.SettlementId)}:{ministryAdminUpdatingDto.SettlementId} " +
+                $"was not found.",
+            });
+        }
+
         var ministeryUpdAdmin = mapper.Map<MinistryAdmin>(ministryAdminUpdatingDto);
         ministeryUpdAdmin.Status = MinistryAdminStatus.Pending;
 
@@ -140,6 +169,7 @@ public class MinistryAdminService : IMinistryAdminService
         List<MinistryAdminGettingDto> ministeryAdminDtos = new List<MinistryAdminGettingDto>();
         foreach (MinistryAdmin ma in ministeryAdmins) {
             ministeryAdminDtos.Add(mapper.Map<MinistryAdminGettingDto>(ma));
+            ministeryAdminDtos.Last().Settlement = codeficatorRepository.GetById(ma.SettlementId).Result.Name;
         }
 
         return Result<IEnumerable<MinistryAdminGettingDto>>.Success(ministeryAdminDtos);
@@ -149,9 +179,10 @@ public class MinistryAdminService : IMinistryAdminService
     {
         logger.LogDebug(
             $"Started getting ministry admin by {nameof(id)}:{id}.");
-
-        return Result<MinistryAdminGettingDto>.Success(mapper.Map<MinistryAdminGettingDto>(
-            await ministryAdminRepository.GetById(id)));
+        var ministeryAdmin = await ministryAdminRepository.GetById(id);
+        var ministeryAdminDto = mapper.Map<MinistryAdminGettingDto>(ministeryAdmin);
+        ministeryAdminDto.Settlement = codeficatorRepository.GetById(ministeryAdmin.SettlementId).Result.Name;
+        return Result<MinistryAdminGettingDto>.Success(ministeryAdminDto);
     }
 
     public async Task<Result<IEnumerable<MinistryAdminGettingDto>>> GetForMinistryId(int id)
@@ -164,6 +195,7 @@ public class MinistryAdminService : IMinistryAdminService
         foreach (MinistryAdmin ma in ministeryAdmins)
         {
             ministeryAdminDtos.Add(mapper.Map<MinistryAdminGettingDto>(ma));
+            ministeryAdminDtos.Last().Settlement = codeficatorRepository.GetById(ma.SettlementId).Result.Name;
         }
 
         return Result<IEnumerable<MinistryAdminGettingDto>>.Success(ministeryAdminDtos);
