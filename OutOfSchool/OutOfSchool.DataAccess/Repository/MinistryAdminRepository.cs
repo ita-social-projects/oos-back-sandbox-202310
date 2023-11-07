@@ -33,7 +33,7 @@ public class MinistryAdminRepository : EntityRepositorySoftDeleted<Guid, Ministr
         var min = await db.MinistryAdmins.FindAsync(id);
         if (min != null)
         {
-            dbContext.Entry(min).State = EntityState.Deleted;
+            db.Entry(min).State = EntityState.Deleted;
         }
 
         await dbContext.SaveChangesAsync().ConfigureAwait(false);
@@ -46,6 +46,13 @@ public class MinistryAdminRepository : EntityRepositorySoftDeleted<Guid, Ministr
         {
             min.Status = Enums.MinistryAdminStatus.Approved;
         }
+
+        await dbContext.SaveChangesAsync().ConfigureAwait(false);
+    }
+
+    public virtual async Task Detach(MinistryAdmin entity)
+    {
+        db.Entry(entity).State = EntityState.Detached;
 
         await dbContext.SaveChangesAsync().ConfigureAwait(false);
     }

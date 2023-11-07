@@ -13,4 +13,6 @@ public interface IMinistryAdminRepository : IEntityRepository<Guid, MinistryAdmi
     Task<IEnumerable<MinistryAdmin>> GetForMinistryId(int id);
 
     Task Approve(Guid id);
+
+    Task Detach(MinistryAdmin entity);
 }

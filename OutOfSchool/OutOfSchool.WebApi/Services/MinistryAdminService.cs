@@ -34,7 +34,7 @@ public class MinistryAdminService : IMinistryAdminService
     {
         logger.LogDebug(
             $"Started approving ministry admin {nameof(id)}:{id}.");
-        if (await GetById(id) is null)
+        if (await ministryAdminRepository.GetById(id) is null)
         {
             return Result<object>.Failed(new OperationError
             {
@@ -110,7 +110,8 @@ public class MinistryAdminService : IMinistryAdminService
         logger.LogDebug(
             $"Started updating ministry admin {nameof(ministryAdminUpdatingDto)}:{ministryAdminUpdatingDto}.");
 
-        var ministeryAdmin = await GetById(ministryAdminUpdatingDto.Id);
+        var ministeryAdmin = await ministryAdminRepository.GetById(ministryAdminUpdatingDto.Id);
+        ministryAdminRepository.Detach(ministeryAdmin);
         if (ministeryAdmin is null)
         {
             return Result<MinistryAdminUpdatingDto>.Failed(new OperationError
@@ -122,13 +123,13 @@ public class MinistryAdminService : IMinistryAdminService
             });
         }
 
-        if (ministeryAdmin.Value.Status == MinistryAdminStatus.Approved)
+        if (ministeryAdmin.Status == MinistryAdminStatus.Approved)
         {
             return Result<MinistryAdminUpdatingDto>.Failed(new OperationError
             {
                 Code = "400",
                 Description = $"Trying to update ministry admin with " +
-                        $"{nameof(ministeryAdmin.Value.Status)}:{ministeryAdmin.Value.Status} .",
+                        $"{nameof(ministeryAdmin.Status)}:{ministeryAdmin.Status} .",
             });
         }
 
@@ -180,6 +181,16 @@ public class MinistryAdminService : IMinistryAdminService
         logger.LogDebug(
             $"Started getting ministry admin by {nameof(id)}:{id}.");
         var ministeryAdmin = await ministryAdminRepository.GetById(id);
+        if (ministeryAdmin is null)
+        {
+            return Result<MinistryAdminGettingDto>.Failed(new OperationError
+            {
+                Code = "400",
+                Description = $"Trying to get ministry admin " +
+                $"{nameof(id)}:{id} " +
+                $"was not found.",
+            });
+        }
         var ministeryAdminDto = mapper.Map<MinistryAdminGettingDto>(ministeryAdmin);
         ministeryAdminDto.Settlement = codeficatorRepository.GetById(ministeryAdmin.SettlementId).Result.Name;
         return Result<MinistryAdminGettingDto>.Success(ministeryAdminDto);

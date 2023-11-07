@@ -330,7 +330,7 @@ public class ChildAchievementService : IChildAchievementService
         }
 
         var workshop = await workshopRepository.GetById(application.WorkshopId).ConfigureAwait(false);
-        if (child is null)
+        if (workshop is null)
         {
             return Result<ChildAchievementUpdatingResponseDto>.Failed(new OperationError
             {
