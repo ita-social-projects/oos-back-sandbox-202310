@@ -510,7 +510,9 @@ public class MappingProfile : Profile
         CreateMap<MinistryAdmin, MinistryAdminUpdatingDto>();
 
         CreateMap<MinistryCreationRequestDto, Ministry>();
+        CreateMap<Ministry, MinistryCreationRequestDto>();
         CreateMap<Ministry, MinistryCreationResponseDto>();
+        CreateMap<MinistryCreationResponseDto, Ministry>();
         CreateMap<Ministry, MinistryGettingDto>();
     }
 

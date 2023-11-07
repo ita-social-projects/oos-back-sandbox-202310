@@ -26,5 +26,5 @@ public class MinistryAdmin : IKeyedEntity<Guid>, ISoftDeleted
 
     public int MinistryId { get; set; }
 
-    public Ministry Ministry { get; set; }
+    public virtual Ministry Ministry { get; set; }
 }

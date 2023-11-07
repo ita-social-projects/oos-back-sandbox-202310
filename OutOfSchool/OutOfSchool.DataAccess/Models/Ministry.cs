@@ -11,5 +11,5 @@ public class Ministry : IKeyedEntity<int>
 
     public string Name { get; set; }
 
-    public ICollection<MinistryAdmin> MinistryAdmins { get; set; }
+    public virtual ICollection<MinistryAdmin> MinistryAdmins { get; set; }
 }
