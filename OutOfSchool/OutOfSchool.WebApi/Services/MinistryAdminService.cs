@@ -5,6 +5,8 @@ using OutOfSchool.WebApi.Models.ChildAchievement;
 using OutOfSchool.WebApi.Models.Ministry;
 using OutOfSchool.Services.Enums;
 using OutOfSchool.Services.Models;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace OutOfSchool.WebApi.Services;
 
@@ -77,7 +79,7 @@ public class MinistryAdminService : IMinistryAdminService
 
         var ministryAdmin = mapper.Map<MinistryAdmin>(ministryAdminCreationRequestDto);
         ministryAdmin.Status = MinistryAdminStatus.Pending;
-
+        ministryAdmin.Password = HashPassword(ministryAdmin.Password);
         var ministryAdminDto = mapper.Map<MinistryAdminCreationResponseDto>(await ministryAdminRepository.Create(ministryAdmin));
         ministryAdminDto.Settlement = codeficatorRepository.GetById(ministryAdminCreationRequestDto.SettlementId).Result.Name;
         return Result<MinistryAdminCreationResponseDto>.Success(ministryAdminDto);
@@ -157,7 +159,7 @@ public class MinistryAdminService : IMinistryAdminService
 
         var ministeryUpdAdmin = mapper.Map<MinistryAdmin>(ministryAdminUpdatingDto);
         ministeryUpdAdmin.Status = MinistryAdminStatus.Pending;
-
+        ministeryUpdAdmin.Password = HashPassword(ministeryUpdAdmin.Password);
         return Result<MinistryAdminUpdatingDto>.Success(mapper.Map<MinistryAdminUpdatingDto>(
             await ministryAdminRepository.Update(ministeryUpdAdmin)));
     }
@@ -210,5 +212,13 @@ public class MinistryAdminService : IMinistryAdminService
         }
 
         return Result<IEnumerable<MinistryAdminGettingDto>>.Success(ministeryAdminDtos);
+    }
+
+    private string HashPassword(string password)
+    {
+        var sha = SHA256.Create();
+        var bytePassword = Encoding.Default.GetBytes(password);
+        var result = Convert.ToBase64String(sha.ComputeHash(bytePassword));
+        return result;
     }
 }
