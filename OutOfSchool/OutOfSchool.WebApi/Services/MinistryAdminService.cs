@@ -104,14 +104,13 @@ public class MinistryAdminService : IMinistryAdminService
             });
         }
 
-        if (ministeryAdmin.Value.Status != MinistryAdminStatus.Approved)
+        if (ministeryAdmin.Value.Status == MinistryAdminStatus.Approved)
         {
             return Result<MinistryAdminUpdatingDto>.Failed(new OperationError
             {
                 Code = "400",
                 Description = $"Trying to update ministry admin with " +
-                        $"{nameof(ministeryAdmin.Value.Status)}:{ministeryAdmin.Value.Status} " +
-                        $"was not Approved.",
+                        $"{nameof(ministeryAdmin.Value.Status)}:{ministeryAdmin.Value.Status} .",
             });
         }
 
