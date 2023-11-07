@@ -16,6 +16,16 @@ public class MinistryController : ControllerBase
         this.service = service ?? throw new ArgumentNullException(nameof(service));
     }
 
+    /// <summary>
+    /// Method for creating a new ministry.
+    /// </summary>
+    /// <param name="ministryCreationRequestDto">Ministry entity to add.</param>
+    /// <returns>Ministry that was created.</returns>
+    [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(MinistryCreationResponseDto))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [HttpPost]
     public async Task<IActionResult> Create(MinistryCreationRequestDto ministryCreationRequestDto)
     {
@@ -30,6 +40,16 @@ public class MinistryController : ControllerBase
             newMinistry);
     }
 
+    /// <summary>
+    /// Delete the ministry from the database.
+    /// </summary>
+    /// <param name="id">The ministry id.</param>
+    /// <returns>If deletion was successful, the result will be Status Code 204.</returns>
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [HttpDelete]
     public async Task<IActionResult> Delete(int id)
     {
@@ -42,6 +62,17 @@ public class MinistryController : ControllerBase
         return NoContent();
     }
 
+    /// <summary>
+    /// Get ministry by id from the database.
+    /// </summary>
+    /// <param name="id">Ministry id to get ministry entity.</param>
+    /// <returns>The ministry that was founded.</returns>
+    [AllowAnonymous]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(MinistryGettingDto))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [HttpGet("GetById")]
     public async Task<IActionResult> GetById(int id)
     {
@@ -59,6 +90,16 @@ public class MinistryController : ControllerBase
         return Ok(ministry);
     }
 
+    /// <summary>
+    /// Get all ministries.
+    /// </summary>
+    /// <returns>The ministries that was founded.</returns>
+    [AllowAnonymous]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(SearchResult<MinistryGettingDto>))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [HttpGet("GetAll")]
     public async Task<IActionResult> GetAll()
     {
