@@ -22,6 +22,7 @@ public class MinistryService : IMinistryService
     {
         logger.LogDebug(
             $"Started creation of a new ministry {nameof(ministryCreationRequestDto)}:{ministryCreationRequestDto}.");
+        _ = ministryCreationRequestDto ?? throw new ArgumentNullException(nameof(ministryCreationRequestDto));
 
         var ministry = mapper.Map<Ministry>(ministryCreationRequestDto);
         return Result<MinistryCreationResponseDto>.Success(

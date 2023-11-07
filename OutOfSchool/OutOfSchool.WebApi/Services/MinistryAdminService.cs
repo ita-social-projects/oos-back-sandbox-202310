@@ -55,6 +55,7 @@ public class MinistryAdminService : IMinistryAdminService
     {
         logger.LogDebug(
             $"Started creation of a new ministry admin {nameof(ministryAdminCreationRequestDto)}:{ministryAdminCreationRequestDto}.");
+        _ = ministryAdminCreationRequestDto ?? throw new ArgumentNullException(nameof(ministryAdminCreationRequestDto));
 
         if (await ministryRepository.GetById(ministryAdminCreationRequestDto.MinistryId) is null)
         {
@@ -111,6 +112,7 @@ public class MinistryAdminService : IMinistryAdminService
     {
         logger.LogDebug(
             $"Started updating ministry admin {nameof(ministryAdminUpdatingDto)}:{ministryAdminUpdatingDto}.");
+        _ = ministryAdminUpdatingDto ?? throw new ArgumentNullException(nameof(ministryAdminUpdatingDto));
 
         var ministeryAdmin = await ministryAdminRepository.GetById(ministryAdminUpdatingDto.Id);
         ministryAdminRepository.Detach(ministeryAdmin);
@@ -218,7 +220,6 @@ public class MinistryAdminService : IMinistryAdminService
     {
         var sha = SHA256.Create();
         var bytePassword = Encoding.Default.GetBytes(password);
-        var result = Convert.ToBase64String(sha.ComputeHash(bytePassword));
-        return result;
+        return Convert.ToBase64String(sha.ComputeHash(bytePassword));
     }
 }
