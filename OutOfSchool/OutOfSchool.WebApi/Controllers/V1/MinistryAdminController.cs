@@ -116,6 +116,29 @@ public class MinistryAdminController : Controller
             });
     }
 
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [HttpPut("Block")]
+    public async Task<ActionResult> Block(Guid ministryAdminId)
+    {
+
+        var response = await service.BlockMinistryAdminAsync(
+                ministryAdminId,
+                userId,
+                await HttpContext.GetTokenAsync("access_token").ConfigureAwait(false))
+            .ConfigureAwait(false);
+
+        return response.Match(
+            error => StatusCode((int)error.HttpStatusCode),
+            _ =>
+            {
+                return Ok();
+            });
+    }
+
     /// <summary>
     /// Get all ministery admins.
     /// </summary>

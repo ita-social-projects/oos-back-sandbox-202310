@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
+using OutOfSchool.Common.Enums;
 using OutOfSchool.Common.Models;
 using OutOfSchool.Services.Models;
 using OutOfSchool.Services.Repository;
@@ -23,6 +24,50 @@ public class MinistryAdminOperationsRESTService : CommunicationService, IMinistr
     {
         this.authorizationServerConfig = authorizationServerConfig.Value;
         this.ministryAdminRepository = ministryAdminRepository;
+    }
+
+    public async Task<Either<ErrorResponse, ActionResult>> BlockMinistryAdminAsync(Guid ministryAdminId, string userId, string token)
+    {
+        var ministryAdmin = await ministryAdminRepository.GetById(ministryAdminId)
+            .ConfigureAwait(false);
+
+        if (ministryAdmin is null)
+        {
+            Logger.LogError("MinistryAdmin(id) {ministryAdminId} not found. User(id): {UserId}", ministryAdminId, userId);
+
+            return new ErrorResponse
+            {
+                HttpStatusCode = HttpStatusCode.NotFound,
+            };
+        }
+
+        var request = new Request()
+        {
+            HttpMethodType = HttpMethodType.Put,
+            Url = new Uri(authorizationServerConfig.Authority, CommunicationConstants.BlockMinistryAdmin + ministryAdminId),
+            Token = token,
+        };
+        Logger.LogDebug(
+            "{HttpMethodType} Request was sent. User(id): {UserId}. Url: {Url}",
+            request.HttpMethodType,
+            userId,
+            request.Url);
+
+        var response = await SendRequest<ResponseDto>(request)
+            .ConfigureAwait(false);
+
+        return response
+            .FlatMap<ResponseDto>(r => r.IsSuccess
+                ? r
+                : new ErrorResponse
+                {
+                    HttpStatusCode = r.HttpStatusCode,
+                    Message = r.Message,
+                })
+            .Map(result => result.Result is not null
+                ? JsonConvert
+                    .DeserializeObject<ActionResult>(result.Result.ToString())
+                : null);
     }
 
     public async Task<Either<ErrorResponse, CreateMinistryAdminDto>> CreateMinistryAdminAsync(string userId, CreateMinistryAdminDto ministryAdminDto, string token)

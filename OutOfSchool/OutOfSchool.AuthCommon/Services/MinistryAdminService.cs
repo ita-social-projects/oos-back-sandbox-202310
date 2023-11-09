@@ -65,6 +65,93 @@ public class MinistryAdminService : IMinistryAdminService
         this.changesLogConfig = changesLogConfig?.Value ?? throw new ArgumentNullException(nameof(changesLogConfig));
     }
 
+    public async Task<ResponseDto> BlockMinistryAdminAsync(Guid ministryAdminId, string userId)
+    {
+        var response = new ResponseDto();
+
+        var ministryAdmin = ministryAdminRepository.GetById(ministryAdminId).Result;
+
+        if (ministryAdmin is null)
+        {
+            response.IsSuccess = false;
+            response.HttpStatusCode = HttpStatusCode.NotFound;
+
+            logger.LogError(
+                "ministryAdmin(id) {ministryAdminId} not found. User(id): {UserId}",
+                ministryAdminId,
+                userId);
+
+            return response;
+        }
+
+        var user = await userManager.FindByIdAsync(ministryAdminId.ToString());
+
+        var executionStrategy = context.Database.CreateExecutionStrategy();
+        return await executionStrategy.Execute(BlockMinistryAdminOperation).ConfigureAwait(false);
+
+        async Task<ResponseDto> BlockMinistryAdminOperation()
+        {
+            await using var transaction = await context.Database.BeginTransactionAsync().ConfigureAwait(false);
+            try
+            {
+                user.IsBlocked = true;
+                var updateResult = await userManager.UpdateAsync(user);
+
+                if (!updateResult.Succeeded)
+                {
+                    await transaction.RollbackAsync().ConfigureAwait(false);
+
+                    logger.LogError(
+                        "Error happened while blocking ministryAdmin. User(id): {UserId}. {Errors}",
+                        userId,
+                        string.Join(Environment.NewLine, updateResult.Errors.Select(e => e.Description)));
+
+                    response.IsSuccess = false;
+                    response.HttpStatusCode = HttpStatusCode.InternalServerError;
+
+                    return response;
+                }
+
+                var updateSecurityStamp = await userManager.UpdateSecurityStampAsync(user);
+
+                if (!updateSecurityStamp.Succeeded)
+                {
+                    await transaction.RollbackAsync().ConfigureAwait(false);
+
+                    logger.LogError(
+                        "Error happened while updating security stamp. ministryAdmin. User(id): {UserId}. {Errors}",
+                        userId,
+                        string.Join(Environment.NewLine, updateSecurityStamp.Errors.Select(e => e.Description)));
+
+                    response.IsSuccess = false;
+                    response.HttpStatusCode = HttpStatusCode.InternalServerError;
+
+                    return response;
+                }
+
+                await transaction.CommitAsync().ConfigureAwait(false);
+                response.IsSuccess = true;
+                response.HttpStatusCode = HttpStatusCode.OK;
+
+                return response;
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync().ConfigureAwait(false);
+
+                logger.LogError(
+                    ex,
+                    "Error happened while blocking ministryAdmin. User(id): {UserId}",
+                    userId);
+
+                response.IsSuccess = false;
+                response.HttpStatusCode = HttpStatusCode.InternalServerError;
+
+                return response;
+            }
+        }
+    }
+
     public async Task<ResponseDto> CreateMinistryAdminAsync(CreateMinistryAdminDto ministryAdminDto, IUrlHelper url, string userId)
     {
 
@@ -144,7 +231,6 @@ public class MinistryAdminService : IMinistryAdminService
                     response.IsSuccess = false;
                     response.HttpStatusCode = HttpStatusCode.BadRequest;
 
-                    // TODO: Don't leak all the errors eventually
                     response.Message = string.Join(
                         Environment.NewLine,
                         result.Errors.Select(e => e.Description));
@@ -184,9 +270,6 @@ public class MinistryAdminService : IMinistryAdminService
 
                 await this.SendInvitationEmail(user, url, password);
 
-                // No sense to commit if the email was not sent, as user will not be able to login
-                // and needs to be re-created
-                // TODO: +1 need Endpoint with sending new password
                 await transaction.CommitAsync();
                 response.IsSuccess = true;
                 response.HttpStatusCode = HttpStatusCode.OK;

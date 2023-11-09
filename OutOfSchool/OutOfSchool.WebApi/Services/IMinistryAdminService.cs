@@ -22,6 +22,11 @@ public interface IMinistryAdminService
         string userId,
         string token);
 
+    Task<Either<ErrorResponse, ActionResult>> BlockMinistryAdminAsync(
+        Guid ministryAdminId,
+        string userId,
+        string token);
+
     Task<Result<MinistryAdminGettingDto>> GetById(Guid id);
 
     Task<Result<IEnumerable<MinistryAdminGettingDto>>> GetAll();

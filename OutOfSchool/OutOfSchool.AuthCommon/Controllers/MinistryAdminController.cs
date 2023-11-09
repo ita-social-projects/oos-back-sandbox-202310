@@ -51,7 +51,6 @@ public class MinistryAdminController : Controller
     }
 
     [HttpPut("{ministryAdminId}")]
-    [HasPermission(Permissions.ProviderRemove)]
     public async Task<ResponseDto> Update(Guid ministryAdminId, UpdateMinistryAdminDto ministryAdminDto)
     {
         logger.LogDebug(
@@ -60,5 +59,14 @@ public class MinistryAdminController : Controller
 
         return await ministryAdminService.
             UpdateMinistryAdminAsync(ministryAdminDto, userId);
+    }
+
+    [HttpPut("{ministryAdminId}")]
+    public async Task<ResponseDto> Block(Guid ministryAdminId)
+    {
+        logger.LogDebug("Operation initiated by User(id): {UserId}", userId);
+
+        return await ministryAdminService
+            .BlockMinistryAdminAsync(ministryAdminId, userId);
     }
 }

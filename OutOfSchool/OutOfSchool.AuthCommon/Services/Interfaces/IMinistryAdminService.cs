@@ -21,4 +21,8 @@ public interface IMinistryAdminService
     Task<ResponseDto> UpdateMinistryAdminAsync(
         UpdateMinistryAdminDto ministryAdminDto,
         string userId);
+
+    Task<ResponseDto> BlockMinistryAdminAsync(
+        Guid ministryAdminId,
+        string userId);
 }
