@@ -1,6 +1,10 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using OutOfSchool.Common.Models;
 using OutOfSchool.Services.Enums;
+using OutOfSchool.Services.Models;
+using OutOfSchool.Services.Repository;
 using OutOfSchool.WebApi.Common;
 using OutOfSchool.WebApi.Models.Ministry;
 using OutOfSchool.WebApi.Services.MinistryAdminOperations;
@@ -67,26 +71,13 @@ public class MinistryAdminService : IMinistryAdminService
             .ConfigureAwait(false);
     }
 
-    public async Task<Result<object>> Delete(Guid id)
+    public async Task<Either<ErrorResponse, ActionResult>> DeleteMinistryAdminAsync(Guid ministryAdminId, string userId, string token)
     {
-        logger.LogDebug(
-            $"Started deleting of a new ministry admin {nameof(id)}:{id}.");
+        logger.LogDebug("MinistryAdmin(id): {ministryAdminId} deleting was started. User(id): {UserId}", ministryAdminId, userId);
 
-        var ministryAdmin = await ministryAdminRepository.GetById(id).ConfigureAwait(false);
-        if (ministryAdmin is null)
-        {
-            return Result<object>.Failed(new OperationError
-            {
-                Code = "400",
-                Description = $"Trying to delete not existing ministry admin (Id = {id}).",
-            });
-        }
-
-        await ministryAdminRepository.Delete(ministryAdmin);
-
-        logger.LogDebug(
-            $"Ministry admin deleted{nameof(id)}:{id}.");
-        return Result<object>.Success(null);
+        return await ministryAdminOperationsService
+            .DeleteMinistryAdminAsync(ministryAdminId, userId, token)
+            .ConfigureAwait(false);
     }
 
     public async Task<Result<MinistryAdminUpdatingDto>> Update(MinistryAdminUpdatingDto ministryAdminUpdatingDto)

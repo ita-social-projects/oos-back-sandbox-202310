@@ -11,6 +11,7 @@ using OutOfSchool.AuthCommon.Services.Password;
 using OutOfSchool.Common.Models;
 using OutOfSchool.RazorTemplatesData.Models.Emails;
 using OutOfSchool.Services.Enums;
+using OutOfSchool.Services.Models;
 using OutOfSchool.Services.Repository;
 using System;
 using System.Collections.Generic;
@@ -69,7 +70,7 @@ public class MinistryAdminService : IMinistryAdminService
             : Array.Empty<string>();
     }
 
-    public async Task<ResponseDto> CreateProviderAdminAsync(CreateMinistryAdminDto ministryAdminDto, IUrlHelper url, string userId)
+    public async Task<ResponseDto> CreateMinistryAdminAsync(CreateMinistryAdminDto ministryAdminDto, IUrlHelper url, string userId)
     {
 
         var user = mapper.Map<User>(ministryAdminDto);
@@ -120,7 +121,6 @@ public class MinistryAdminService : IMinistryAdminService
                 user.IsRegistered = true;
                 user.IsBlocked = false;
                 user.Role = nameof(Role.MinistryAdmin).ToLower();
-
                 var result = await userManager.CreateAsync(user, password);
 
                 if (!result.Succeeded)
@@ -163,6 +163,7 @@ public class MinistryAdminService : IMinistryAdminService
                 ministryAdminDto.UserId = user.Id;
 
                 var ministryAdmin = mapper.Map<MinistryAdmin>(ministryAdminDto);
+                ministryAdmin.Id = Guid.Parse(user.Id);
 
                 await ministryAdminRepository.Create(ministryAdmin)
                     .ConfigureAwait(false);
@@ -189,6 +190,79 @@ public class MinistryAdminService : IMinistryAdminService
                 await transaction.RollbackAsync();
 
                 logger.LogError(ex, "Operation failed for User(id): {UserId}", userId);
+
+                response.IsSuccess = false;
+                response.HttpStatusCode = HttpStatusCode.InternalServerError;
+
+                return response;
+            }
+        });
+        return result;
+    }
+
+    public async Task<ResponseDto> DeleteMinistryAdminAsync(Guid ministryAdminId, string userId)
+    {
+        var executionStrategy = context.Database.CreateExecutionStrategy();
+        var result = await executionStrategy.Execute(async () =>
+        {
+            var response = new ResponseDto();
+            await using var transaction = await context.Database.BeginTransactionAsync().ConfigureAwait(false);
+            try
+            {
+                var ministryAdmin = ministryAdminRepository.GetById(ministryAdminId).Result;
+
+                if (ministryAdmin is null)
+                {
+                    response.IsSuccess = false;
+                    response.HttpStatusCode = HttpStatusCode.NotFound;
+
+                    logger.LogError(
+                        "ministryAdmin(id) {ministryAdminId} not found. User(id): {UserId}",
+                        ministryAdminId,
+                        userId);
+
+                    return response;
+                }
+
+                context.MinistryAdmins.Remove(ministryAdmin);
+
+                var user = await userManager.FindByIdAsync((ministryAdmin.Id).ToString());
+                var result = await userManager.DeleteAsync(user);
+
+                if (!result.Succeeded)
+                {
+                    await transaction.RollbackAsync();
+
+                    logger.LogError(
+                        "Error happened while deleting ministryAdmin. User(id): {UserId}. {Errors}",
+                        userId,
+                        result.ErrorMessages());
+
+                    response.IsSuccess = false;
+                    response.HttpStatusCode = HttpStatusCode.InternalServerError;
+
+                    return response;
+                }
+
+                await transaction.CommitAsync();
+                response.IsSuccess = true;
+                response.HttpStatusCode = HttpStatusCode.OK;
+
+                logger.LogInformation(
+                    "ministryAdmin(id):{ministryAdminId} was successfully deleted by User(id): {UserId}",
+                    ministryAdminId,
+                    userId);
+
+                return response;
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+
+                logger.LogError(
+                    ex,
+                    "Error happened while deleting MinistryAdmin. User(id): {UserId}",
+                    userId);
 
                 response.IsSuccess = false;
                 response.HttpStatusCode = HttpStatusCode.InternalServerError;

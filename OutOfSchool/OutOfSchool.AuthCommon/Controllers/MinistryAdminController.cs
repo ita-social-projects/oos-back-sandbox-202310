@@ -38,6 +38,15 @@ public class MinistryAdminController : Controller
         logger.LogDebug("Operation initiated by User(id): {UserId}", userId);
 
         return await ministryAdminService
-            .CreateProviderAdminAsync(ministryAdminDto, Url, userId);
+            .CreateMinistryAdminAsync(ministryAdminDto, Url, userId);
+    }
+
+    [HttpDelete("{ministryAdminId}")]
+    public async Task<ResponseDto> Delete(Guid ministryAdminId)
+    {
+        logger.LogDebug("Operation initiated by User(id): {UserId}", userId);
+
+        return await ministryAdminService
+            .DeleteMinistryAdminAsync(ministryAdminId, userId);
     }
 }

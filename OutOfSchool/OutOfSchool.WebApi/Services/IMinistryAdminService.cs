@@ -1,4 +1,5 @@
-﻿using OutOfSchool.Common.Models;
+﻿using Microsoft.AspNetCore.Mvc;
+using OutOfSchool.Common.Models;
 using OutOfSchool.WebApi.Common;
 using OutOfSchool.WebApi.Models.Ministry;
 
@@ -11,7 +12,10 @@ public interface IMinistryAdminService
         CreateMinistryAdminDto ministryAdminDto,
         string token);
 
-    Task<Result<object>> Delete(Guid id);
+    Task<Either<ErrorResponse, ActionResult>> DeleteMinistryAdminAsync(
+        Guid ministryAdminId,
+        string userId,
+        string token);
 
     Task<Result<MinistryAdminUpdatingDto>> Update(MinistryAdminUpdatingDto ministryAdminUpdatingDto);
 

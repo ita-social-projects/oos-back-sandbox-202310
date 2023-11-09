@@ -73,13 +73,18 @@ public class MinistryAdminController : Controller
     [HttpDelete]
     public async Task<IActionResult> Delete(Guid id)
     {
-        var result = await service.Delete(id);
-        if (!result.Succeeded)
-        {
-            return BadRequest(result.OperationResult.Errors.ElementAt(0).Description);
-        }
+        var response = await service.DeleteMinistryAdminAsync(
+                id,
+                userId,
+                await HttpContext.GetTokenAsync("access_token").ConfigureAwait(false))
+            .ConfigureAwait(false);
 
-        return NoContent();
+        return response.Match(
+            error => StatusCode((int)error.HttpStatusCode),
+            _ =>
+            {
+                return NoContent();
+            });
     }
 
     /// <summary>

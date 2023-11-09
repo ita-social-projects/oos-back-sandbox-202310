@@ -9,8 +9,12 @@ using System.Threading.Tasks;
 namespace OutOfSchool.AuthCommon.Services.Interfaces;
 public interface IMinistryAdminService
 {
-    Task<ResponseDto> CreateProviderAdminAsync(
+    Task<ResponseDto> CreateMinistryAdminAsync(
         CreateMinistryAdminDto ministryAdminDto,
         IUrlHelper url,
+        string userId);
+
+    Task<ResponseDto> DeleteMinistryAdminAsync(
+        Guid ministryAdminId,
         string userId);
 }
