@@ -503,11 +503,7 @@ public class MappingProfile : Profile
         CreateMap<ChildAchievementUpdatingRequestDto, ChildAchievement>();
         CreateMap<ChildAchievementTypeRequestDto, ChildAchievementType>();
 
-        CreateMap<MinistryAdminCreationRequestDto, MinistryAdmin>();
-        CreateMap<MinistryAdmin, MinistryAdminCreationResponseDto>();
         CreateMap<MinistryAdmin, MinistryAdminGettingDto>();
-        CreateMap<MinistryAdminUpdatingDto, MinistryAdmin>();
-        CreateMap<MinistryAdmin, MinistryAdminUpdatingDto>();
 
         CreateMap<MinistryCreationRequestDto, Ministry>();
         CreateMap<Ministry, MinistryCreationRequestDto>();

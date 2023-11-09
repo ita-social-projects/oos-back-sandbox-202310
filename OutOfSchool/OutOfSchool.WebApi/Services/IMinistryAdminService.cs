@@ -27,6 +27,4 @@ public interface IMinistryAdminService
     Task<Result<IEnumerable<MinistryAdminGettingDto>>> GetAll();
 
     Task<Result<IEnumerable<MinistryAdminGettingDto>>> GetForMinistryId(int id);
-
-    Task<Result<object>> Approve(Guid id);
 }

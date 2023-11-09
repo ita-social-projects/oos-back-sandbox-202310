@@ -39,17 +39,6 @@ public class MinistryAdminRepository : EntityRepositorySoftDeleted<Guid, Ministr
         await dbContext.SaveChangesAsync().ConfigureAwait(false);
     }
 
-    public async Task Approve(Guid id)
-    {
-        var min = await db.MinistryAdmins.FindAsync(id);
-        if (min != null)
-        {
-            min.Status = Enums.MinistryAdminStatus.Approved;
-        }
-
-        await dbContext.SaveChangesAsync().ConfigureAwait(false);
-    }
-
     public virtual async Task Detach(MinistryAdmin entity)
     {
         db.Entry(entity).State = EntityState.Detached;

@@ -91,10 +91,10 @@ public class MinistryAdminController : Controller
     /// <summary>
     /// Update info about ministery admin in the database.
     /// </summary>
-    /// <param name="ministryAdminUpdatingDto">Ministery admin entity to update.</param>
+    /// <param name="ministryAdminDto">Ministery admin entity to update.</param>
     /// <returns>The ministery admin that was updated.</returns>
     [HasPermission(Permissions.SystemManagement)]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(MinistryAdminUpdatingDto))]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
@@ -108,35 +108,12 @@ public class MinistryAdminController : Controller
                 await HttpContext.GetTokenAsync("access_token").ConfigureAwait(false))
             .ConfigureAwait(false);
 
-        return response.Match(
-            error => StatusCode((int)error.HttpStatusCode),
-            _ =>
+        return response.Match<ActionResult>(
+            error => StatusCode((int)error.HttpStatusCode, error.Message),
+            result =>
             {
-                return Ok();
+                return Ok(result);
             });
-    }
-
-    /// <summary>
-    /// Approve iministery admin status in the database.
-    /// </summary>
-    /// <param name="id">Ministery admin id.</param>
-    /// <returns>If approve was successful, the result will be Status Code 200.</returns>
-    [HasPermission(Permissions.SystemManagement)]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(StatusCodes.Status403Forbidden)]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    [HttpPut("Approve")]
-    public async Task<IActionResult> Approve(Guid id)
-    {
-        var result = await service.Approve(id);
-        if (!result.Succeeded)
-        {
-            return BadRequest(result.OperationResult.Errors.ElementAt(0).Description);
-        }
-
-        return Ok(result);
     }
 
     /// <summary>

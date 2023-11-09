@@ -20,8 +20,6 @@ public class MinistryAdmin : IKeyedEntity<Guid>, ISoftDeleted
 
     public string Email { get; set; }
 
-    public MinistryAdminStatus Status { get; set; }
-
     public int MinistryId { get; set; }
 
     public virtual Ministry Ministry { get; set; }

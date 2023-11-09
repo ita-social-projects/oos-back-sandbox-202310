@@ -38,25 +38,6 @@ public class MinistryAdminService : IMinistryAdminService
         this.logger = logger;
     }
 
-    public async Task<Result<object>> Approve(Guid id)
-    {
-        logger.LogDebug(
-            $"Started approving ministry admin {nameof(id)}:{id}.");
-        if (await ministryAdminRepository.GetById(id) is null)
-        {
-            return Result<object>.Failed(new OperationError
-            {
-                Code = "400",
-                Description = $"Trying to approve ministry admin with " +
-                    $"{nameof(id)}:{id} " +
-                    $"was not found.",
-            });
-        }
-
-        ministryAdminRepository.Approve(id);
-        return Result<object>.Success(null);
-    }
-
     public async Task<Either<ErrorResponse, CreateMinistryAdminDto>> CreateMinistryAdminAsync(
         string userId,
         CreateMinistryAdminDto ministryAdminDto,

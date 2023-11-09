@@ -9,6 +9,7 @@ using OutOfSchool.AuthCommon.Config.ExternalUriModels;
 using OutOfSchool.AuthCommon.Extensions;
 using OutOfSchool.AuthCommon.Services.Interfaces;
 using OutOfSchool.AuthCommon.Services.Password;
+using OutOfSchool.Common.Enums;
 using OutOfSchool.Common.Models;
 using OutOfSchool.RazorTemplatesData.Models.Emails;
 using OutOfSchool.Services.Enums;
@@ -36,8 +37,6 @@ public class MinistryAdminService : IMinistryAdminService
     private readonly UserManager<User> userManager;
     private readonly OutOfSchoolDbContext context;
     private readonly IRazorViewToStringRenderer renderer;
-    private readonly IProviderAdminChangesLogService providerAdminChangesLogService;
-    private readonly string[] trackedProperties;
 
     public MinistryAdminService(
         IMapper mapper,
@@ -49,7 +48,6 @@ public class MinistryAdminService : IMinistryAdminService
         UserManager<User> userManager,
         OutOfSchoolDbContext context,
         IRazorViewToStringRenderer renderer,
-        IProviderAdminChangesLogService providerAdminChangesLogService,
         IOptions<AngularClientScopeExternalUrisConfig> externalUrisConfig,
         IOptions<ChangesLogConfig> changesLogConfig)
     {
@@ -62,14 +60,9 @@ public class MinistryAdminService : IMinistryAdminService
         this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         this.emailSender = emailSender ?? throw new ArgumentNullException(nameof(emailSender));
         this.renderer = renderer ?? throw new ArgumentNullException(nameof(renderer));
-        this.providerAdminChangesLogService = providerAdminChangesLogService ?? throw new ArgumentNullException(nameof(providerAdminChangesLogService));
         this.externalUrisConfig =
             externalUrisConfig?.Value ?? throw new ArgumentNullException(nameof(externalUrisConfig));
         this.changesLogConfig = changesLogConfig?.Value ?? throw new ArgumentNullException(nameof(changesLogConfig));
-        this.trackedProperties =
-            this.changesLogConfig.TrackedProperties.TryGetValue("ProviderAdmin", out var trackedProperties)
-            ? trackedProperties
-            : Array.Empty<string>();
     }
 
     public async Task<ResponseDto> CreateMinistryAdminAsync(CreateMinistryAdminDto ministryAdminDto, IUrlHelper url, string userId)
@@ -95,13 +88,27 @@ public class MinistryAdminService : IMinistryAdminService
                 return response;
             }
 
-            if (await codeficatorRepository.GetById(ministryAdminDto.SettlementId) is null)
+            var settlement = await codeficatorRepository.GetById(ministryAdminDto.SettlementId);
+            if (settlement is null)
             {
                 response.IsSuccess = false;
                 response.HttpStatusCode = HttpStatusCode.BadRequest;
                 response.Message = $"Trying to create a new ministry admin the Settlement with " +
                     $"{nameof(ministryAdminDto.SettlementId)}:{ministryAdminDto.SettlementId} " +
                     $"was not found.";
+
+                return response;
+            }
+
+            if (settlement.Category == CodeficatorCategory.Region.Name ||
+            settlement.Category == CodeficatorCategory.District.Name ||
+            settlement.Category == CodeficatorCategory.CityDistrict.Name)
+            {
+                response.IsSuccess = false;
+                response.HttpStatusCode = HttpStatusCode.BadRequest;
+                response.Message = $"Trying to create a new ministry admin the Settlement with " +
+                    $"{nameof(ministryAdminDto.SettlementId)}:{ministryAdminDto.SettlementId} " +
+                    $"not confirmed.";
 
                 return response;
             }
@@ -303,13 +310,27 @@ public class MinistryAdminService : IMinistryAdminService
             return response;
         }
 
-        if (await codeficatorRepository.GetById(ministryAdminDto.SettlementId) is null)
+        var settlement = await codeficatorRepository.GetById(ministryAdminDto.SettlementId);
+        if (settlement is null)
         {
             response.IsSuccess = false;
             response.HttpStatusCode = HttpStatusCode.BadRequest;
             response.Message = $"Trying to update a new ministry admin the Settlement with " +
                 $"{nameof(ministryAdminDto.SettlementId)}:{ministryAdminDto.SettlementId} " +
                 $"was not found.";
+
+            return response;
+        }
+
+        if (settlement.Category == CodeficatorCategory.Region.Name ||
+            settlement.Category == CodeficatorCategory.District.Name ||
+            settlement.Category == CodeficatorCategory.CityDistrict.Name)
+        {
+            response.IsSuccess = false;
+            response.HttpStatusCode = HttpStatusCode.BadRequest;
+            response.Message = $"Trying to create a new ministry admin the Settlement with " +
+                $"{nameof(ministryAdminDto.SettlementId)}:{ministryAdminDto.SettlementId} " +
+                $"not confirmed.";
 
             return response;
         }
