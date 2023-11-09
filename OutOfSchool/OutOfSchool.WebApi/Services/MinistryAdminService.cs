@@ -80,62 +80,13 @@ public class MinistryAdminService : IMinistryAdminService
             .ConfigureAwait(false);
     }
 
-    public async Task<Result<MinistryAdminUpdatingDto>> Update(MinistryAdminUpdatingDto ministryAdminUpdatingDto)
+    public async Task<Either<ErrorResponse, UpdateMinistryAdminDto>> UpdateMinistryAdminAsync(UpdateMinistryAdminDto updateMinistryAdminDto, string userId, string token)
     {
-        logger.LogDebug(
-            $"Started updating ministry admin {nameof(ministryAdminUpdatingDto)}:{ministryAdminUpdatingDto}.");
-        _ = ministryAdminUpdatingDto ?? throw new ArgumentNullException(nameof(ministryAdminUpdatingDto));
+        logger.LogDebug("MinistryAdmin(id): {ministryAdminId} updating was started. User(id): {UserId}", updateMinistryAdminDto.Id, userId);
 
-        var ministeryAdmin = await ministryAdminRepository.GetById(ministryAdminUpdatingDto.Id);
-        ministryAdminRepository.Detach(ministeryAdmin);
-        if (ministeryAdmin is null)
-        {
-            return Result<MinistryAdminUpdatingDto>.Failed(new OperationError
-            {
-                Code = "400",
-                Description = $"Trying to update ministry admin with " +
-                    $"{nameof(ministryAdminUpdatingDto.MinistryId)}:{ministryAdminUpdatingDto.MinistryId} " +
-                    $"was not found.",
-            });
-        }
-
-        if (ministeryAdmin.Status == MinistryAdminStatus.Approved)
-        {
-            return Result<MinistryAdminUpdatingDto>.Failed(new OperationError
-            {
-                Code = "400",
-                Description = $"Trying to update ministry admin with " +
-                        $"{nameof(ministeryAdmin.Status)}:{ministeryAdmin.Status} .",
-            });
-        }
-
-        if (await ministryRepository.GetById(ministryAdminUpdatingDto.MinistryId) is null)
-        {
-            return Result<MinistryAdminUpdatingDto>.Failed(new OperationError
-            {
-                Code = "400",
-                Description = $"Trying to update ministry admin the Ministry with " +
-                $"{nameof(ministryAdminUpdatingDto.MinistryId)}:{ministryAdminUpdatingDto.MinistryId} " +
-                $"was not found.",
-            });
-        }
-
-        if (await codeficatorRepository.GetById(ministryAdminUpdatingDto.SettlementId) is null)
-        {
-            return Result<MinistryAdminUpdatingDto>.Failed(new OperationError
-            {
-                Code = "400",
-                Description = $"Trying to create a new ministry admin the Settlement with " +
-                $"{nameof(ministryAdminUpdatingDto.SettlementId)}:{ministryAdminUpdatingDto.SettlementId} " +
-                $"was not found.",
-            });
-        }
-
-        var ministeryUpdAdmin = mapper.Map<MinistryAdmin>(ministryAdminUpdatingDto);
-        ministeryUpdAdmin.Status = MinistryAdminStatus.Pending;
-        //ministeryUpdAdmin.Password = HashPassword(ministeryUpdAdmin.Password);
-        return Result<MinistryAdminUpdatingDto>.Success(mapper.Map<MinistryAdminUpdatingDto>(
-            await ministryAdminRepository.Update(ministeryUpdAdmin)));
+        return await ministryAdminOperationsService
+            .UpdateMinistryAdminAsync(updateMinistryAdminDto, userId, token)
+            .ConfigureAwait(false);
     }
 
     public async Task<Result<IEnumerable<MinistryAdminGettingDto>>> GetAll()
@@ -186,12 +137,5 @@ public class MinistryAdminService : IMinistryAdminService
         }
 
         return Result<IEnumerable<MinistryAdminGettingDto>>.Success(ministeryAdminDtos);
-    }
-
-    private string HashPassword(string password)
-    {
-        var sha = SHA256.Create();
-        var bytePassword = Encoding.Default.GetBytes(password);
-        return Convert.ToBase64String(sha.ComputeHash(bytePassword));
     }
 }

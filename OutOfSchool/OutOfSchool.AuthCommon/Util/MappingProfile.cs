@@ -19,5 +19,6 @@ public class MappingProfile : Profile
             .ForMember(dest => dest.PhoneNumber, opt => opt.MapFrom(src => Constants.PhonePrefix + src.PhoneNumber.Right(Constants.PhoneShortLength)));
 
         CreateMap<CreateMinistryAdminDto, MinistryAdmin>();
+        CreateMap<UpdateMinistryAdminDto, MinistryAdmin>();
     }
 }

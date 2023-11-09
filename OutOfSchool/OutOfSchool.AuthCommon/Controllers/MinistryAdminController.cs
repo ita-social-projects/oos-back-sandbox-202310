@@ -49,4 +49,16 @@ public class MinistryAdminController : Controller
         return await ministryAdminService
             .DeleteMinistryAdminAsync(ministryAdminId, userId);
     }
+
+    [HttpPut("{ministryAdminId}")]
+    [HasPermission(Permissions.ProviderRemove)]
+    public async Task<ResponseDto> Update(Guid ministryAdminId, UpdateMinistryAdminDto ministryAdminDto)
+    {
+        logger.LogDebug(
+            "Operation initiated by User(id): {UserId}",
+            userId);
+
+        return await ministryAdminService.
+            UpdateMinistryAdminAsync(ministryAdminDto, userId);
+    }
 }

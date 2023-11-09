@@ -17,7 +17,10 @@ public interface IMinistryAdminService
         string userId,
         string token);
 
-    Task<Result<MinistryAdminUpdatingDto>> Update(MinistryAdminUpdatingDto ministryAdminUpdatingDto);
+    Task<Either<ErrorResponse, UpdateMinistryAdminDto>> UpdateMinistryAdminAsync(
+        UpdateMinistryAdminDto updateMinistryAdminDto,
+        string userId,
+        string token);
 
     Task<Result<MinistryAdminGettingDto>> GetById(Guid id);
 

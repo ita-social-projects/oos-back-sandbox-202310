@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Nest;
 using OutOfSchool.Common.Models;
 using OutOfSchool.Services.Models;
 using OutOfSchool.WebApi.Common;
@@ -99,15 +100,20 @@ public class MinistryAdminController : Controller
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [HttpPut]
-    public async Task<IActionResult> Update(MinistryAdminUpdatingDto ministryAdminUpdatingDto)
+    public async Task<IActionResult> Update(UpdateMinistryAdminDto ministryAdminDto)
     {
-        var updatedMinistryAdmin = await service.Update(ministryAdminUpdatingDto);
-        if (!updatedMinistryAdmin.Succeeded)
-        {
-            return BadRequest(updatedMinistryAdmin.OperationResult.Errors.ElementAt(0).Description);
-        }
+        var response = await service.UpdateMinistryAdminAsync(
+                ministryAdminDto,
+                userId,
+                await HttpContext.GetTokenAsync("access_token").ConfigureAwait(false))
+            .ConfigureAwait(false);
 
-        return Ok(updatedMinistryAdmin);
+        return response.Match(
+            error => StatusCode((int)error.HttpStatusCode),
+            _ =>
+            {
+                return Ok();
+            });
     }
 
     /// <summary>

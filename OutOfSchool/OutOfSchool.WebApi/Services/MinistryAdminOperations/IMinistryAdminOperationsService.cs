@@ -11,4 +11,9 @@ public interface IMinistryAdminOperationsService
         Guid ministryAdminId,
         string userId,
         string token);
+
+    Task<Either<ErrorResponse, UpdateMinistryAdminDto>> UpdateMinistryAdminAsync(
+        UpdateMinistryAdminDto updateMinistryAdminDto,
+        string userId,
+        string token);
 }

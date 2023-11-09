@@ -17,4 +17,8 @@ public interface IMinistryAdminService
     Task<ResponseDto> DeleteMinistryAdminAsync(
         Guid ministryAdminId,
         string userId);
+
+    Task<ResponseDto> UpdateMinistryAdminAsync(
+        UpdateMinistryAdminDto ministryAdminDto,
+        string userId);
 }
