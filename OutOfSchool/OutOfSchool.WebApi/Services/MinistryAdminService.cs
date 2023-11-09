@@ -1,15 +1,9 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
 using OutOfSchool.Common.Models;
-using OutOfSchool.Services.Enums;
-using OutOfSchool.Services.Models;
-using OutOfSchool.Services.Repository;
 using OutOfSchool.WebApi.Common;
 using OutOfSchool.WebApi.Models.Ministry;
 using OutOfSchool.WebApi.Services.MinistryAdminOperations;
-using System.Security.Cryptography;
-using System.Text;
 
 namespace OutOfSchool.WebApi.Services;
 

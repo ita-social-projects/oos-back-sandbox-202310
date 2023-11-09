@@ -1,11 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
-using OutOfSchool.Common.Enums;
 using OutOfSchool.Common.Models;
-using OutOfSchool.Services.Models;
-using OutOfSchool.Services.Repository;
-using OutOfSchool.WebApi.Models;
 
 namespace OutOfSchool.WebApi.Services.MinistryAdminOperations;
 

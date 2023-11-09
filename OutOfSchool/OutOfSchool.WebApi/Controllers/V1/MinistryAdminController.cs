@@ -1,14 +1,9 @@
-﻿using Elastic.CommonSchema;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using Nest;
 using OutOfSchool.Common.Models;
-using OutOfSchool.Services.Models;
 using OutOfSchool.WebApi.Common;
 using OutOfSchool.WebApi.Models;
-using OutOfSchool.WebApi.Models.ChildAchievement;
 using OutOfSchool.WebApi.Models.Ministry;
 
 namespace OutOfSchool.WebApi.Controllers.V1;
@@ -38,7 +33,7 @@ public class MinistryAdminController : Controller
     /// <param name="ministryAdminDto">Ministery admin entity to add.</param>
     /// <returns>The ministery admin that was created.</returns>
     [HasPermission(Permissions.SystemManagement)]
-    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(SearchResult<CreateMinistryAdminDto>))]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
@@ -61,7 +56,7 @@ public class MinistryAdminController : Controller
     }
 
     /// <summary>
-    /// Delete the cministery admin from the database.
+    /// Delete the ministery admin from the database.
     /// </summary>
     /// <param name="id">The ministery admin id.</param>
     /// <returns>If deletion was successful, the result will be Status Code 204.</returns>
@@ -94,7 +89,7 @@ public class MinistryAdminController : Controller
     /// <param name="ministryAdminDto">Ministery admin entity to update.</param>
     /// <returns>The ministery admin that was updated.</returns>
     [HasPermission(Permissions.SystemManagement)]
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(SearchResult<UpdateMinistryAdminDto>))]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
@@ -116,17 +111,23 @@ public class MinistryAdminController : Controller
             });
     }
 
+    /// <summary>
+    /// Block the ministery admin from the database.
+    /// </summary>
+    /// <param name="id">The ministery admin id.</param>
+    /// <returns>If blocking was successful, the result will be Status Code 200.</returns>
+    [HasPermission(Permissions.SystemManagement)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [HttpPut("Block")]
-    public async Task<ActionResult> Block(Guid ministryAdminId)
+    public async Task<ActionResult> Block(Guid id)
     {
 
         var response = await service.BlockMinistryAdminAsync(
-                ministryAdminId,
+                id,
                 userId,
                 await HttpContext.GetTokenAsync("access_token").ConfigureAwait(false))
             .ConfigureAwait(false);

@@ -1,26 +1,13 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using OutOfSchool.AuthCommon.Config;
 using OutOfSchool.AuthCommon.Config.ExternalUriModels;
 using OutOfSchool.AuthCommon.Extensions;
-using OutOfSchool.AuthCommon.Services.Interfaces;
-using OutOfSchool.AuthCommon.Services.Password;
 using OutOfSchool.Common.Enums;
 using OutOfSchool.Common.Models;
 using OutOfSchool.RazorTemplatesData.Models.Emails;
 using OutOfSchool.Services.Enums;
-using OutOfSchool.Services.Models;
-using OutOfSchool.Services.Repository;
-using SendGrid;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace OutOfSchool.AuthCommon.Services;
 public class MinistryAdminService : IMinistryAdminService

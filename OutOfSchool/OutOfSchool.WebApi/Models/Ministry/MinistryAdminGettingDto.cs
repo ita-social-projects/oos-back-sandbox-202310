@@ -1,6 +1,4 @@
-﻿using OutOfSchool.Services.Enums;
-
-namespace OutOfSchool.WebApi.Models.Ministry;
+﻿namespace OutOfSchool.WebApi.Models.Ministry;
 
 public class MinistryAdminGettingDto
 {
