@@ -18,9 +18,7 @@ public class MinistryAdmin : IKeyedEntity<Guid>, ISoftDeleted
 
     public int SettlementId { get; set; }
 
-    public string EmailAddress { get; set; }
-
-    public string Password { get; set; }
+    public string Email { get; set; }
 
     public MinistryAdminStatus Status { get; set; }
 

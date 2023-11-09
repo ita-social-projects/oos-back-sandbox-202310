@@ -514,6 +514,9 @@ public class MappingProfile : Profile
         CreateMap<Ministry, MinistryCreationResponseDto>();
         CreateMap<MinistryCreationResponseDto, Ministry>();
         CreateMap<Ministry, MinistryGettingDto>();
+        CreateMap<CreateMinistryAdminDto, MinistryAdmin>();
+        CreateMap<CreateMinistryAdminDto, User>();
+        CreateMap<User,CreateMinistryAdminDto>();
     }
 
     private IMappingExpression<TSource, TDestination> CreateSoftDeletedMap<TSource, TDestination>()

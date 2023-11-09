@@ -1,6 +1,10 @@
 ﻿using Elastic.CommonSchema;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
+using OutOfSchool.Common.Models;
+using OutOfSchool.Services.Models;
 using OutOfSchool.WebApi.Common;
 using OutOfSchool.WebApi.Models;
 using OutOfSchool.WebApi.Models.ChildAchievement;
@@ -9,39 +13,50 @@ using OutOfSchool.WebApi.Models.Ministry;
 namespace OutOfSchool.WebApi.Controllers.V1;
 [Route("api/[controller]")]
 [ApiController]
-public class MinistryAdminController : ControllerBase
+public class MinistryAdminController : Controller
 {
 
     private readonly IMinistryAdminService service;
+    private string path;
+    private string userId;
 
     public MinistryAdminController(IMinistryAdminService service)
     {
         this.service = service ?? throw new ArgumentNullException(nameof(service));
     }
 
+    public override void OnActionExecuting(ActionExecutingContext context)
+    {
+        path = $"{context.HttpContext.Request.Path.Value}[{context.HttpContext.Request.Method}]";
+        userId = GettingUserProperties.GetUserId(User);
+    }
+
     /// <summary>
     /// Method for creating a new ministery admin.
     /// </summary>
-    /// <param name="ministryAdminCreationRequestDto">Ministery admin entity to add.</param>
+    /// <param name="ministryAdminDto">Ministery admin entity to add.</param>
     /// <returns>The ministery admin that was created.</returns>
     [HasPermission(Permissions.SystemManagement)]
-    [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(MinistryAdminCreationResponseDto))]
+    [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [HttpPost]
-    public async Task<IActionResult> Create(MinistryAdminCreationRequestDto ministryAdminCreationRequestDto)
+    public async Task<IActionResult> Create(CreateMinistryAdminDto ministryAdminDto)
     {
-        var newMinistryAdmin = await service.Create(ministryAdminCreationRequestDto);
-        if (!newMinistryAdmin.Succeeded)
-        {
-            return BadRequest(newMinistryAdmin.OperationResult.Errors.ElementAt(0).Description);
-        }
+        var response = await service.CreateMinistryAdminAsync(
+                userId,
+                ministryAdminDto,
+                await HttpContext.GetTokenAsync("access_token").ConfigureAwait(false))
+            .ConfigureAwait(false);
 
-        return Created(
-            nameof(newMinistryAdmin),
-            newMinistryAdmin);
+        return response.Match<ActionResult>(
+            error => StatusCode((int)error.HttpStatusCode, error.Message),
+            result =>
+            {
+                return Ok(result);
+            });
     }
 
     /// <summary>

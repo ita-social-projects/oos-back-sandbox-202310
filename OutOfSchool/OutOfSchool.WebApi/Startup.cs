@@ -1,14 +1,17 @@
 using System.Text.Json.Serialization;
 using AutoMapper;
+using Elastic.CommonSchema;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.HeaderPropagation;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Primitives;
 using OpenIddict.Validation.AspNetCore;
 using OutOfSchool.Services.Repository.Files;
+using OutOfSchool.WebApi.Services.MinistryAdminOperations;
 using OutOfSchool.WebApi.Services.Strategies.Interfaces;
 using OutOfSchool.WebApi.Services.Strategies.WorkshopStrategies;
 using OutOfSchool.WebApi.Util.Mapping;
+using StackExchange.Redis;
 
 namespace OutOfSchool.WebApi;
 
@@ -283,6 +286,8 @@ public static class Startup
 
         services.AddTransient<IMinistryRepository, MinistryRepository>();
         services.AddTransient<IMinistryAdminRepository, MinistryAdminRepository>();
+        services.AddTransient<IMinistryAdminOperationsService, MinistryAdminOperationsRESTService>();
+        services.AddScoped<IMinistryAdminService, MinistryAdminService>();
 
         services.Configure<ChangesLogConfig>(configuration.GetSection(ChangesLogConfig.Name));
 
@@ -293,7 +298,7 @@ public static class Startup
         services.AddSingleton<ElasticPinger>();
         services.AddHostedService<ElasticPinger>(provider => provider.GetService<ElasticPinger>());
 
-        services.AddSingleton(Log.Logger);
+        services.AddSingleton(Serilog.Log.Logger);
         services.AddVersioning();
         var swaggerConfig = configuration.GetSection(SwaggerConfig.Name).Get<SwaggerConfig>();
 

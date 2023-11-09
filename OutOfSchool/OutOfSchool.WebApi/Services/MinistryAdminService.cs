@@ -1,10 +1,9 @@
 ﻿using AutoMapper;
-using OutOfSchool.Services.Repository;
-using OutOfSchool.WebApi.Common;
-using OutOfSchool.WebApi.Models.ChildAchievement;
-using OutOfSchool.WebApi.Models.Ministry;
+using OutOfSchool.Common.Models;
 using OutOfSchool.Services.Enums;
-using OutOfSchool.Services.Models;
+using OutOfSchool.WebApi.Common;
+using OutOfSchool.WebApi.Models.Ministry;
+using OutOfSchool.WebApi.Services.MinistryAdminOperations;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -15,6 +14,7 @@ public class MinistryAdminService : IMinistryAdminService
     private readonly IMinistryAdminRepository ministryAdminRepository;
     private readonly IMinistryRepository ministryRepository;
     private readonly ICodeficatorRepository codeficatorRepository;
+    private readonly IMinistryAdminOperationsService ministryAdminOperationsService;
     private readonly IMapper mapper;
     private readonly ILogger<MinistryAdminService> logger;
 
@@ -22,12 +22,14 @@ public class MinistryAdminService : IMinistryAdminService
         IMinistryAdminRepository ministryAdminRepository,
         IMinistryRepository ministryRepository,
         ICodeficatorRepository codeficatorRepository,
+        IMinistryAdminOperationsService ministryAdminOperationsService,
         IMapper mapper,
         ILogger<MinistryAdminService> logger)
     {
         this.ministryAdminRepository = ministryAdminRepository;
         this.ministryRepository = ministryRepository;
         this.codeficatorRepository = codeficatorRepository;
+        this.ministryAdminOperationsService = ministryAdminOperationsService;
         this.mapper = mapper;
         this.logger = logger;
     }
@@ -51,39 +53,18 @@ public class MinistryAdminService : IMinistryAdminService
         return Result<object>.Success(null);
     }
 
-    public async Task<Result<MinistryAdminCreationResponseDto>> Create(MinistryAdminCreationRequestDto ministryAdminCreationRequestDto)
+    public async Task<Either<ErrorResponse, CreateMinistryAdminDto>> CreateMinistryAdminAsync(
+        string userId,
+        CreateMinistryAdminDto ministryAdminDto,
+        string token)
     {
         logger.LogDebug(
-            $"Started creation of a new ministry admin {nameof(ministryAdminCreationRequestDto)}:{ministryAdminCreationRequestDto}.");
-        _ = ministryAdminCreationRequestDto ?? throw new ArgumentNullException(nameof(ministryAdminCreationRequestDto));
+            $"Started creation of a new ministry admin {nameof(ministryAdminDto)}:{ministryAdminDto}.");
+        _ = ministryAdminDto ?? throw new ArgumentNullException(nameof(ministryAdminDto));
 
-        if (await ministryRepository.GetById(ministryAdminCreationRequestDto.MinistryId) is null)
-        {
-            return Result<MinistryAdminCreationResponseDto>.Failed(new OperationError
-            {
-                Code = "400",
-                Description = $"Trying to create a new ministry admin the Ministry with " +
-                $"{nameof(ministryAdminCreationRequestDto.MinistryId)}:{ministryAdminCreationRequestDto.MinistryId} " +
-                $"was not found.",
-            });
-        }
-
-        if (await codeficatorRepository.GetById(ministryAdminCreationRequestDto.SettlementId) is null) {
-            return Result<MinistryAdminCreationResponseDto>.Failed(new OperationError
-            {
-                Code = "400",
-                Description = $"Trying to create a new ministry admin the Settlement with " +
-                $"{nameof(ministryAdminCreationRequestDto.SettlementId)}:{ministryAdminCreationRequestDto.SettlementId} " +
-                $"was not found.",
-            });
-        }
-
-        var ministryAdmin = mapper.Map<MinistryAdmin>(ministryAdminCreationRequestDto);
-        ministryAdmin.Status = MinistryAdminStatus.Pending;
-        ministryAdmin.Password = HashPassword(ministryAdmin.Password);
-        var ministryAdminDto = mapper.Map<MinistryAdminCreationResponseDto>(await ministryAdminRepository.Create(ministryAdmin));
-        ministryAdminDto.Settlement = codeficatorRepository.GetById(ministryAdminCreationRequestDto.SettlementId).Result.Name;
-        return Result<MinistryAdminCreationResponseDto>.Success(ministryAdminDto);
+        return await ministryAdminOperationsService
+            .CreateMinistryAdminAsync(userId, ministryAdminDto, token)
+            .ConfigureAwait(false);
     }
 
     public async Task<Result<object>> Delete(Guid id)
@@ -161,7 +142,7 @@ public class MinistryAdminService : IMinistryAdminService
 
         var ministeryUpdAdmin = mapper.Map<MinistryAdmin>(ministryAdminUpdatingDto);
         ministeryUpdAdmin.Status = MinistryAdminStatus.Pending;
-        ministeryUpdAdmin.Password = HashPassword(ministeryUpdAdmin.Password);
+        //ministeryUpdAdmin.Password = HashPassword(ministeryUpdAdmin.Password);
         return Result<MinistryAdminUpdatingDto>.Success(mapper.Map<MinistryAdminUpdatingDto>(
             await ministryAdminRepository.Update(ministeryUpdAdmin)));
     }

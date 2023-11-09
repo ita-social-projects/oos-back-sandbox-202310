@@ -1,11 +1,15 @@
-﻿using OutOfSchool.WebApi.Common;
+﻿using OutOfSchool.Common.Models;
+using OutOfSchool.WebApi.Common;
 using OutOfSchool.WebApi.Models.Ministry;
 
 namespace OutOfSchool.WebApi.Services;
 
 public interface IMinistryAdminService
 {
-    Task<Result<MinistryAdminCreationResponseDto>> Create(MinistryAdminCreationRequestDto ministryAdminCreationRequestDto);
+    Task<Either<ErrorResponse, CreateMinistryAdminDto>> CreateMinistryAdminAsync(
+        string userId,
+        CreateMinistryAdminDto ministryAdminDto,
+        string token);
 
     Task<Result<object>> Delete(Guid id);
 
