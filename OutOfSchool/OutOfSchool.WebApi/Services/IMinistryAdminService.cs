@@ -25,7 +25,8 @@ public interface IMinistryAdminService
     Task<Either<ErrorResponse, ActionResult>> BlockMinistryAdminAsync(
         Guid ministryAdminId,
         string userId,
-        string token);
+        string token,
+        bool isBlocked);
 
     Task<Result<MinistryAdminGettingDto>> GetById(Guid id);
 

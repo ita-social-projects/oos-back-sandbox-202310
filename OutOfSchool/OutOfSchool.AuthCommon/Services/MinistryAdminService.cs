@@ -52,7 +52,7 @@ public class MinistryAdminService : IMinistryAdminService
         this.changesLogConfig = changesLogConfig?.Value ?? throw new ArgumentNullException(nameof(changesLogConfig));
     }
 
-    public async Task<ResponseDto> BlockMinistryAdminAsync(Guid ministryAdminId, string userId)
+    public async Task<ResponseDto> BlockMinistryAdminAsync(Guid ministryAdminId, string userId, bool isBlocked)
     {
         var response = new ResponseDto();
 
@@ -81,7 +81,7 @@ public class MinistryAdminService : IMinistryAdminService
             await using var transaction = await context.Database.BeginTransactionAsync().ConfigureAwait(false);
             try
             {
-                user.IsBlocked = true;
+                user.IsBlocked = isBlocked;
                 var updateResult = await userManager.UpdateAsync(user);
 
                 if (!updateResult.Succeeded)

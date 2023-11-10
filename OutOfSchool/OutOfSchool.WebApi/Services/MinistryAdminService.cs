@@ -114,12 +114,12 @@ public class MinistryAdminService : IMinistryAdminService
         return Result<IEnumerable<MinistryAdminGettingDto>>.Success(ministeryAdminDtos);
     }
 
-    public async Task<Either<ErrorResponse, ActionResult>> BlockMinistryAdminAsync(Guid ministryAdminId, string userId, string token)
+    public async Task<Either<ErrorResponse, ActionResult>> BlockMinistryAdminAsync(Guid ministryAdminId, string userId, string token, bool isBlocked)
     {
         logger.LogDebug("MinistryAdmin(id): {ministryAdminId} blocking was started. User(id): {UserId}", ministryAdminId, userId);
 
         return await ministryAdminOperationsService
-            .BlockMinistryAdminAsync(ministryAdminId, userId, token)
+            .BlockMinistryAdminAsync(ministryAdminId, userId, token, isBlocked)
             .ConfigureAwait(false);
     }
 }

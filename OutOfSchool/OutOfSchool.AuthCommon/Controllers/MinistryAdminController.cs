@@ -55,12 +55,12 @@ public class MinistryAdminController : Controller
             UpdateMinistryAdminAsync(ministryAdminDto, userId);
     }
 
-    [HttpPut("{ministryAdminId}")]
-    public async Task<ResponseDto> Block(Guid ministryAdminId)
+    [HttpPut("{ministryAdminId}/{isBlocked}")]
+    public async Task<ResponseDto> Block(Guid ministryAdminId, bool isBlocked)
     {
         logger.LogDebug("Operation initiated by User(id): {UserId}", userId);
 
         return await ministryAdminService
-            .BlockMinistryAdminAsync(ministryAdminId, userId);
+            .BlockMinistryAdminAsync(ministryAdminId, userId, isBlocked);
     }
 }

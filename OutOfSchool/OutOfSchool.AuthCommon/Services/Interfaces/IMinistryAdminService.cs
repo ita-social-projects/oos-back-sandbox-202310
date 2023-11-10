@@ -19,5 +19,6 @@ public interface IMinistryAdminService
 
     Task<ResponseDto> BlockMinistryAdminAsync(
         Guid ministryAdminId,
-        string userId);
+        string userId,
+        bool isBlocked);
 }

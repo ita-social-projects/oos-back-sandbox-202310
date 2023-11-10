@@ -20,5 +20,6 @@ public interface IMinistryAdminOperationsService
     Task<Either<ErrorResponse, ActionResult>> BlockMinistryAdminAsync(
         Guid ministryAdminId,
         string userId,
-        string token);
+        string token,
+        bool isBlocked);
 }

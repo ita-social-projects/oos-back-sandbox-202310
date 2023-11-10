@@ -22,7 +22,7 @@ public class MinistryAdminOperationsRESTService : CommunicationService, IMinistr
         this.ministryAdminRepository = ministryAdminRepository;
     }
 
-    public async Task<Either<ErrorResponse, ActionResult>> BlockMinistryAdminAsync(Guid ministryAdminId, string userId, string token)
+    public async Task<Either<ErrorResponse, ActionResult>> BlockMinistryAdminAsync(Guid ministryAdminId, string userId, string token, bool isBlocked)
     {
         var ministryAdmin = await ministryAdminRepository.GetById(ministryAdminId)
             .ConfigureAwait(false);
@@ -40,7 +40,11 @@ public class MinistryAdminOperationsRESTService : CommunicationService, IMinistr
         var request = new Request()
         {
             HttpMethodType = HttpMethodType.Put,
-            Url = new Uri(authorizationServerConfig.Authority, CommunicationConstants.BlockMinistryAdmin + ministryAdminId),
+            Url = new Uri(authorizationServerConfig.Authority, string.Concat(
+                CommunicationConstants.BlockMinistryAdmin,
+                ministryAdminId,
+                new PathString("/"),
+                isBlocked)),
             Token = token,
         };
         Logger.LogDebug(

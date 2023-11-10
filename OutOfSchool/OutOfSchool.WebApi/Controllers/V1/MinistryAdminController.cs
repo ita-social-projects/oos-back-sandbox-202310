@@ -123,13 +123,13 @@ public class MinistryAdminController : Controller
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [HttpPut("Block")]
-    public async Task<ActionResult> Block(Guid id)
+    public async Task<ActionResult> Block(Guid id, bool? isBlocked)
     {
-
         var response = await service.BlockMinistryAdminAsync(
                 id,
                 userId,
-                await HttpContext.GetTokenAsync("access_token").ConfigureAwait(false))
+                await HttpContext.GetTokenAsync("access_token").ConfigureAwait(false),
+                (bool)isBlocked)
             .ConfigureAwait(false);
 
         return response.Match(
