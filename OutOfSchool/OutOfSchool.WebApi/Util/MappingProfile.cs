@@ -295,6 +295,8 @@ public class MappingProfile : Profile
 
         CreateMap<ElasticsearchSyncRecord, ElasticsearchSyncRecordDto>().ReverseMap();
 
+        CreateMap<Favourite, FavouriteDto>().ReverseMap();
+
 #warning The next mapping is here to test UI Admin features. Will be removed or refactored
         CreateMap<ShortUserDto, AdminDto>();
 
