@@ -10,6 +10,7 @@ using NUnit.Framework;
 using OutOfSchool.Services.Models;
 using OutOfSchool.Services.Repository;
 using OutOfSchool.WebApi.Models;
+using OutOfSchool.WebApi.Models.Workshops;
 using OutOfSchool.WebApi.Services;
 
 namespace OutOfSchool.WebApi.Tests.Services;
@@ -20,6 +21,7 @@ public class FavouriteServiceTests
     private Mock<ILogger<FavouriteService>> loggerMock;
     private Mock<IMapper> mapperMock;
     private Mock<IWorkshopService> workshopServiceMock;
+    private Mock<IUserService> userServiceMock;
 
     [SetUp]
     public void Setup()
@@ -28,12 +30,14 @@ public class FavouriteServiceTests
         loggerMock = new Mock<ILogger<FavouriteService>>();
         mapperMock = new Mock<IMapper>();
         workshopServiceMock = new Mock<IWorkshopService>();
+        userServiceMock = new Mock<IUserService>();
 
         favouriteService = new FavouriteService(
             favouriteRepositoryMock.Object,
             loggerMock.Object,
             mapperMock.Object,
-            workshopServiceMock.Object);
+            workshopServiceMock.Object,
+            userServiceMock.Object);
     }
 
     [Test]
@@ -65,6 +69,8 @@ public class FavouriteServiceTests
         mapperMock.Setup(mapper => mapper.Map<Favourite>(dto)).Returns(resultDto);
         favouriteRepositoryMock.Setup(repo => repo.Create(resultDto)).ReturnsAsync(resultDto);
         mapperMock.Setup(mapper => mapper.Map<FavouriteDto>(resultDto)).Returns(dto);
+        workshopServiceMock.Setup(workshop => workshop.GetById(workshopId)).ReturnsAsync(new WorkshopDto());
+        userServiceMock.Setup(service => service.GetById(userId)).ReturnsAsync(new ShortUserDto());
 
         // Act
         var result = await favouriteService.Create(dto);
