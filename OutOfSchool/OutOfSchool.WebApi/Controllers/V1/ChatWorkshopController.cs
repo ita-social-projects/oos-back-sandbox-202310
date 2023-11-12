@@ -285,6 +285,26 @@ public class ChatWorkshopController : ControllerBase
     public Task<IActionResult> GetProvidersRoomsWithMessagesByParentAsync(Guid parentId)
         => GetProvidersRoomsByParentIdAsync(parentId, true);
 
+    /// <summary>
+    /// Get chat rooms for current provider with filter.
+    /// </summary>
+    /// <param name="providerId">Provider's id.</param>
+    /// <param name="filter">Entity that represents searching parameters.</param>
+    /// <returns>ChatRooms that was found.</returns>
+    [HttpGet("provider/providerchatroomsforadmin/{providerId}")]
+    [HasPermission(Permissions.SystemManagement)]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<ChatRoomWorkshopDtoWithLastMessage>))]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> GetProvidersRoomsByIdAndFilter(Guid providerId, [FromQuery] ChatWorkshopFilter filter = null)
+    {
+       var chatrooms = await roomService.GetByProviderIdWithFilterAsync(providerId, filter);
+
+       return Ok(chatrooms);
+    }
+
     private async Task<IActionResult> GetOrCreateRoomByApplicationIdAsync(Guid applicationId)
     {
         async Task<IActionResult> Operation()

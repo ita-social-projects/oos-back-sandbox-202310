@@ -392,6 +392,8 @@ public class MappingProfile : Profile
 
         CreateMap<ChatMessageWorkshop, ChatMessageWorkshopDto>().ReverseMap();
         CreateMap<ChatRoomWorkshop, ChatRoomWorkshopDto>();
+        CreateMap<ChatRoomWorkshop, ChatRoomWorkshopDtoWithLastMessage>()
+            .ForMember(dest => dest.LastMessage, opt => opt.MapFrom(src => src.ChatMessages.Last()));
         CreateMap<Workshop, WorkshopInfoForChatListDto>();
         CreateMap<ChatRoomWorkshopForChatList, ChatRoomWorkshopDtoWithLastMessage>();
         CreateMap<WorkshopInfoForChatList, WorkshopInfoForChatListDto>();
