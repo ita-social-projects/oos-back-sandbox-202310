@@ -194,6 +194,7 @@ public static class Startup
         services.AddTransient<IChatRoomWorkshopService, ChatRoomWorkshopService>();
         services.AddTransient<IChildService, ChildService>();
         services.AddTransient<IDirectionService, DirectionService>();
+        services.AddTransient<IFavouriteService, FavouriteService>();
         services.AddTransient<IParentService, ParentService>();
         services.AddTransient<IProviderService, ProviderService>();
         services.AddTransient<IProviderTypeService, ProviderTypeService>();

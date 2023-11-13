@@ -2,17 +2,19 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using OutOfSchool.Services;
 
 #nullable disable
 
-namespace OutOfSchool.IdentityServer.Data.Migrations.OutOfSchoolMigrations
+namespace OutOfSchool.Migrations.Data.Migrations.OutOfSchoolMigrations
 {
     [DbContext(typeof(OutOfSchoolDbContext))]
-    partial class OutOfSchoolDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231103174600_AddFavourites")]
+    partial class AddFavourites
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -869,57 +871,6 @@ namespace OutOfSchool.IdentityServer.Data.Migrations.OutOfSchoolMigrations
                             Name = "Відсутній статус",
                             NameEn = "Without status"
                         });
-                });
-
-            modelBuilder.Entity("OutOfSchool.Services.Models.Ministry", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("longtext");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Ministries");
-                });
-
-            modelBuilder.Entity("OutOfSchool.Services.Models.MinistryAdmin", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("binary(16)");
-
-                    b.Property<string>("Email")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("FirstName")
-                        .HasColumnType("longtext");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<string>("LastName")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("MiddleName")
-                        .HasColumnType("longtext");
-
-                    b.Property<int>("MinistryId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("PhoneNumber")
-                        .HasColumnType("longtext");
-
-                    b.Property<int>("SettlementId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("MinistryId");
-
-                    b.ToTable("MinistryAdmins");
                 });
 
             modelBuilder.Entity("OutOfSchool.Services.Models.Notification", b =>
@@ -2356,17 +2307,6 @@ namespace OutOfSchool.IdentityServer.Data.Migrations.OutOfSchoolMigrations
                     b.Navigation("Entity");
                 });
 
-            modelBuilder.Entity("OutOfSchool.Services.Models.MinistryAdmin", b =>
-                {
-                    b.HasOne("OutOfSchool.Services.Models.Ministry", "Ministry")
-                        .WithMany("MinistryAdmins")
-                        .HasForeignKey("MinistryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Ministry");
-                });
-
             modelBuilder.Entity("OutOfSchool.Services.Models.Parent", b =>
                 {
                     b.HasOne("OutOfSchool.Services.Models.User", "User")
@@ -2587,11 +2527,6 @@ namespace OutOfSchool.IdentityServer.Data.Migrations.OutOfSchoolMigrations
             modelBuilder.Entity("OutOfSchool.Services.Models.InstitutionStatus", b =>
                 {
                     b.Navigation("Providers");
-                });
-
-            modelBuilder.Entity("OutOfSchool.Services.Models.Ministry", b =>
-                {
-                    b.Navigation("MinistryAdmins");
                 });
 
             modelBuilder.Entity("OutOfSchool.Services.Models.Parent", b =>

@@ -96,6 +96,8 @@ public partial class OutOfSchoolDbContext : IdentityDbContext<User>, IDataProtec
 
     public DbSet<QuartzJob> QuartzJobs { get; set; }
 
+    public DbSet<Favourite> Favourites { get; set; }
+
     public DbSet<ChildAchievement> ChildAchievements { get; set; }
 
     public DbSet<ChildAchievementType> ChildAchievementTypes { get; set; }
@@ -127,6 +129,7 @@ public partial class OutOfSchoolDbContext : IdentityDbContext<User>, IDataProtec
         builder.ApplyConfiguration(new DirectionConfiguration());
         builder.ApplyConfiguration(new EntityImagesConfiguration<Provider>());
         builder.ApplyConfiguration(new EntityImagesConfiguration<Workshop>());
+        builder.ApplyConfiguration(new FavouriteConfiguration());
         builder.ApplyConfiguration(new InstitutionConfiguration());
         builder.ApplyConfiguration(new InstitutionFieldDescriptionConfiguration());
         builder.ApplyConfiguration(new InstitutionHierarchyConfiguration());
