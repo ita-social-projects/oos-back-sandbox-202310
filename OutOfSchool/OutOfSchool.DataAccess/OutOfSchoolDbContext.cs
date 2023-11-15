@@ -102,6 +102,10 @@ public partial class OutOfSchoolDbContext : IdentityDbContext<User>, IDataProtec
 
     public DbSet<ChildAchievementType> ChildAchievementTypes { get; set; }
 
+    public DbSet<Ministry> Ministries { get; set; }
+
+    public DbSet<MinistryAdmin> MinistryAdmins { get; set; }
+
     public async Task<int> CompleteAsync() => await this.SaveChangesAsync();
 
     public int Complete() => this.SaveChanges();
@@ -142,6 +146,7 @@ public partial class OutOfSchoolDbContext : IdentityDbContext<User>, IDataProtec
         builder.ApplyConfiguration(new UserConfiguration());
         builder.ApplyConfiguration(new WorkshopConfiguration());
         builder.ApplyConfiguration(new WorkshopDescriptionItemConfiguration());
+        builder.ApplyConfiguration(new MinistryConfiguration());
 
         builder.Seed();
         builder.UpdateIdentityTables();

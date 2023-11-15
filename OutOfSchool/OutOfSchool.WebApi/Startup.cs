@@ -1,14 +1,17 @@
 using System.Text.Json.Serialization;
 using AutoMapper;
+using Elastic.CommonSchema;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.HeaderPropagation;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Primitives;
 using OpenIddict.Validation.AspNetCore;
 using OutOfSchool.Services.Repository.Files;
+using OutOfSchool.WebApi.Services.MinistryAdminOperations;
 using OutOfSchool.WebApi.Services.Strategies.Interfaces;
 using OutOfSchool.WebApi.Services.Strategies.WorkshopStrategies;
 using OutOfSchool.WebApi.Util.Mapping;
+using StackExchange.Redis;
 
 namespace OutOfSchool.WebApi;
 
@@ -241,6 +244,9 @@ public static class Startup
         services.AddTransient<IChildAchievementService, ChildAchievementService>();
         services.AddTransient<IChildAchievementTypeService, ChildAchievementTypeService>();
 
+        services.AddTransient<IMinistryService, MinistryService>();
+        services.AddTransient<IMinistryAdminService, MinistryAdminService>();
+
         // entities repositories
         services.AddTransient(typeof(IEntityAddOnlyRepository<,>), typeof(EntityRepository<,>));
         services.AddTransient(typeof(IEntityRepository<,>), typeof(EntityRepository<,>));
@@ -279,6 +285,11 @@ public static class Startup
         services.AddTransient<IChildAchievementRepository, ChildAchievementRepository>();
         services.AddTransient<IChildAchievementTypeRepository, ChildAchievementTypeRepository>();
 
+        services.AddTransient<IMinistryRepository, MinistryRepository>();
+        services.AddTransient<IMinistryAdminRepository, MinistryAdminRepository>();
+        services.AddTransient<IMinistryAdminOperationsService, MinistryAdminOperationsRESTService>();
+        services.AddScoped<IMinistryAdminService, MinistryAdminService>();
+
         services.Configure<ChangesLogConfig>(configuration.GetSection(ChangesLogConfig.Name));
 
         // Register the Permission policy handlers
@@ -288,7 +299,7 @@ public static class Startup
         services.AddSingleton<ElasticPinger>();
         services.AddHostedService<ElasticPinger>(provider => provider.GetService<ElasticPinger>());
 
-        services.AddSingleton(Log.Logger);
+        services.AddSingleton(Serilog.Log.Logger);
         services.AddVersioning();
         var swaggerConfig = configuration.GetSection(SwaggerConfig.Name).Get<SwaggerConfig>();
 

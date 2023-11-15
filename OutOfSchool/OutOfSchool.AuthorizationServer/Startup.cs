@@ -4,12 +4,13 @@ using OpenIddict.Abstractions;
 using OpenIddict.Validation.AspNetCore;
 using OutOfSchool.AuthCommon.Config;
 using OutOfSchool.AuthCommon.Extensions;
+using OutOfSchool.AuthCommon.Services;
 using OutOfSchool.AuthCommon.Services.Interfaces;
 using OutOfSchool.AuthorizationServer.Config;
 using OutOfSchool.AuthorizationServer.Extensions;
 using OutOfSchool.AuthorizationServer.KeyManagement;
 using OutOfSchool.AuthorizationServer.Services;
-
+using OutOfSchool.Services.Repository;
 using SameSiteMode = Microsoft.AspNetCore.Http.SameSiteMode;
 
 namespace OutOfSchool.AuthorizationServer;
@@ -212,6 +213,11 @@ public static class Startup
         services.AddAuthCommon(config, builder.Environment.IsDevelopment());
         services.AddTransient<IInteractionService, InteractionService>();
         services.AddTransient<IProfileService, ProfileService>();
+
+        services.AddTransient<ICodeficatorRepository, CodeficatorRepository>();
+        services.AddTransient<IMinistryRepository, MinistryRepository>();
+        services.AddTransient<IMinistryAdminRepository, MinistryAdminRepository>();
+        services.AddTransient<IMinistryAdminService, MinistryAdminService>();
 
         services.AddHealthChecks()
             .AddDbContextCheck<OutOfSchoolDbContext>(

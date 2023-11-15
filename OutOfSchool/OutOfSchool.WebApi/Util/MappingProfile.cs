@@ -10,6 +10,7 @@ using OutOfSchool.WebApi.Models.ChatWorkshop;
 using OutOfSchool.WebApi.Models.ChildAchievement;
 using OutOfSchool.WebApi.Models.Codeficator;
 using OutOfSchool.WebApi.Models.Geocoding;
+using OutOfSchool.WebApi.Models.Ministry;
 using OutOfSchool.WebApi.Models.Notifications;
 using OutOfSchool.WebApi.Models.Providers;
 using OutOfSchool.WebApi.Models.SocialGroup;
@@ -503,6 +504,17 @@ public class MappingProfile : Profile
         CreateMap<ChildAchievementCreationRequestDto, ChildAchievement>();
         CreateMap<ChildAchievementUpdatingRequestDto, ChildAchievement>();
         CreateMap<ChildAchievementTypeRequestDto, ChildAchievementType>();
+
+        CreateMap<MinistryAdmin, MinistryAdminGettingDto>();
+
+        CreateMap<MinistryCreationRequestDto, Ministry>();
+        CreateMap<Ministry, MinistryCreationRequestDto>();
+        CreateMap<Ministry, MinistryCreationResponseDto>();
+        CreateMap<MinistryCreationResponseDto, Ministry>();
+        CreateMap<Ministry, MinistryGettingDto>();
+        CreateMap<CreateMinistryAdminDto, MinistryAdmin>();
+        CreateMap<CreateMinistryAdminDto, User>();
+        CreateMap<User,CreateMinistryAdminDto>();
     }
 
     private IMappingExpression<TSource, TDestination> CreateSoftDeletedMap<TSource, TDestination>()
