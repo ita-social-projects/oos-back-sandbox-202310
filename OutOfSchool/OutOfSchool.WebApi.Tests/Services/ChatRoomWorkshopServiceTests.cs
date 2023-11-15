@@ -448,6 +448,38 @@ public class ChatRoomWorkshopServiceTests
     }
     #endregion
 
+    #region GetByProviderIdWithFilterAsync
+    [Test]
+    public async Task GetByProviderIdWithFilterAsync_WhenProviderExists_ShouldReturnFoundEntitities()
+    {
+        // Arrange
+        var existingProviderId = providers[0].Id;
+        var filter = new ChatWorkshopFilter();
+
+        // Act
+        var result = await roomService.GetByProviderIdWithFilterAsync(existingProviderId, filter).ConfigureAwait(false);
+
+        // Assert
+        Assert.IsInstanceOf<IEnumerable<ChatRoomWorkshopDtoWithLastMessage>>(result);
+        Assert.IsNotNull(result);
+        Assert.IsTrue(result.Any());
+    }
+
+    [Test]
+    public async Task GetByProviderIdWithFilterAsync_WhenProviderDoesNotExist_ShouldReturnEmpty()
+    {
+        // Arrange
+        var notExistingProviderId = Guid.NewGuid();
+        var filter = new ChatWorkshopFilter();
+
+        // Act
+        var result = await roomService.GetByProviderIdWithFilterAsync(notExistingProviderId, filter).ConfigureAwait(false);
+
+        // Assert
+        Assert.IsEmpty(result);
+    }
+    #endregion
+
     private void SeedDatabase()
     {
         using var context = new OutOfSchoolDbContext(options);

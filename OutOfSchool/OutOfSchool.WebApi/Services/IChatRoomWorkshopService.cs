@@ -72,6 +72,14 @@ public interface IChatRoomWorkshopService
     Task<IEnumerable<ChatRoomWorkshopDtoWithLastMessage>> GetByProviderIdAsync(Guid providerId);
 
     /// <summary>
+    /// Get ChatRooms with last message and count of not read messages by specified Provider.
+    /// </summary>
+    /// <param name="providerId">Provider's identifier.</param>
+    /// <param name="filter">Entity that represents searching parameters.</param>
+    /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation. The task result contains a <see cref="IEnumerable{ChatRoomWithLastMessage}"/> that contains elements from the input sequence.</returns>
+    Task<IEnumerable<ChatRoomWorkshopDtoWithLastMessage>> GetByProviderIdWithFilterAsync(Guid providerId, ChatWorkshopFilter filter);
+
+    /// <summary>
     /// Get ChatRooms with last message and count of not read messages by specified Workshop.
     /// </summary>
     /// <param name="workshopId">Workshop's identifier.</param>

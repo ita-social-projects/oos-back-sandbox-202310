@@ -1,10 +1,8 @@
 ﻿using AutoMapper;
-using Microsoft.Extensions.Logging;
-using OutOfSchool.Services.Models;
+
+using System.Linq.Expressions;
 using OutOfSchool.WebApi.Models;
 using OutOfSchool.WebApi.Models.ChatWorkshop;
-using OutOfSchool.WebApi.Services.Strategies.Interfaces;
-using System.Linq.Expressions;
 
 namespace OutOfSchool.WebApi.Services;
 
@@ -302,6 +300,33 @@ public class ChatRoomWorkshopService : IChatRoomWorkshopService
     }
 
     /// <inheritdoc/>
+    public async Task<IEnumerable<ChatRoomWorkshopDtoWithLastMessage>> GetByProviderIdWithFilterAsync(Guid providerId, ChatWorkshopFilter filter)
+    {
+        logger.LogDebug($"Process of getting {nameof(ChatRoomWorkshopDtoWithLastMessage)}(s/es) with {nameof(providerId)}:{providerId} and filter was started.");
+
+        try
+        {
+            filter ??= new ChatWorkshopFilter();
+
+            var filterPredicate = SmallPredicateBuild(filter, providerId);
+
+            var rooms = await roomRepository.Get(
+                    whereExpression: filterPredicate).ToListAsync().ConfigureAwait(false);
+
+            logger.LogDebug(rooms.Count > 0
+                ? $"There is no Chat rooms in the system with providerId:{providerId}."
+                : $"Successfully got all {rooms.Count} records with providerId:{providerId}.");
+
+            return rooms.Select(x => mapper.Map<ChatRoomWorkshopDtoWithLastMessage>(x));
+        }
+        catch (Exception exception)
+        {
+            logger.LogError($"Getting all {nameof(ChatRoomWorkshopDtoWithLastMessage)}(s/es) with {nameof(providerId)}:{providerId} and filter. Exception: {exception.Message}");
+            throw;
+        }
+    }
+
+    /// <inheritdoc/>
     [Obsolete("Unused")]
     public async Task<IEnumerable<ChatRoomWorkshopDtoWithLastMessage>> GetByWorkshopIdAsync(Guid workshopId)
     {
@@ -520,6 +545,31 @@ public class ChatRoomWorkshopService : IChatRoomWorkshopService
                 .Or(x => x.Workshop.Title.ToLower().Contains(filter.SearchText.ToLower()))
                 .Or(x => x.Parent.User.PhoneNumber.StartsWith(filter.SearchText))
                 .Or(x => x.Workshop.Provider.PhoneNumber.StartsWith(filter.SearchText));
+
+            predicate = predicate.And(tempPredicate);
+        }
+
+        return predicate;
+    }
+
+    private Expression<Func<ChatRoomWorkshop, bool>> SmallPredicateBuild(ChatWorkshopFilter filter, Guid providerId)
+    {
+        var predicate = PredicateBuilder.True<ChatRoomWorkshop>();
+
+        predicate = predicate.And(x => x.Workshop.ProviderId == providerId);
+
+        if (filter.WorkshopIds is not null && filter.WorkshopIds.Any())
+        {
+            predicate = predicate.And(x => filter.WorkshopIds.Any(c => c == x.WorkshopId));
+        }
+
+        if (!string.IsNullOrWhiteSpace(filter.SearchText))
+        {
+            var tempPredicate = PredicateBuilder.False<ChatRoomWorkshop>()
+                .Or(x => x.Parent.User.LastName.ToLower().StartsWith(filter.SearchText.ToLower()))
+                .Or(x => x.Parent.User.MiddleName.ToLower().StartsWith(filter.SearchText.ToLower()))
+                .Or(x => x.Parent.User.FirstName.ToLower().StartsWith(filter.SearchText.ToLower()))
+                .Or(x => x.Workshop.Title.ToLower().Contains(filter.SearchText.ToLower()));
 
             predicate = predicate.And(tempPredicate);
         }
